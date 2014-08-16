@@ -1,0 +1,13 @@
+language: scala
+
+scala:
+  - 2.11.2
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+script:
+  - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
+  - git show --oneline --check
+  - sbt ++${TRAVIS_SCALA_VERSION} checkGenerate test
