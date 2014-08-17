@@ -12,7 +12,9 @@ abstract class OptionBase extends InlineUtil with OptionBoilerplate{
 
   protected def wrapSome(value: Tree): Tree
 
-  protected def none: Tree
+  protected def none(value: Tree): Tree
+
+  protected def isEmpty(value: Tree): Tree
 
   override final def impl(params: List[Tree], types: List[Type], f: Tree, result: Tree, isTuple: Boolean = false): Tree = {
     val valNamesAndParams = params.zipWithIndex.map {
@@ -49,8 +51,8 @@ abstract class OptionBase extends InlineUtil with OptionBoilerplate{
         val ident = Ident(name)
         q"""
           $valdef
-          if($ident.isEmpty){
-            $none
+          if(${isEmpty(ident)}){
+            ${none(ident)}
           }else{
             $ifNonEmpty
           }

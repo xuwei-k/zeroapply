@@ -12,6 +12,16 @@ final class ZeroApplyTest {
   }
 
   @Test
+  def utilTry(): Unit = {
+    import scala.util.{Success, Try, Failure}
+    TryApply.tuple2(Try(1), Try(2)) mustEqual Try((1, 2))
+    TryApply.apply2(Success(1), Success(2))(_ + _) mustEqual Try(3)
+    val e = new Throwable{}
+    TryApply.apply2(Success(1), Failure(e))(_ + _) mustEqual Failure(e)
+    TryApply.apply2(Success(1), Success(2))((_, _) => (throw e): Int) mustEqual Try(throw e)
+  }
+
+  @Test
   def either(): Unit = {
     val a = Right[Int, String]("a")
     val b = Right[Int, List[Int]](Nil)

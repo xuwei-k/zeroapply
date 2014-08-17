@@ -134,6 +134,7 @@ ${(2 to n).map(gen).mkString("\n")}
     SourceCode("OptionBoilerplate", optionBoilerplate(n)) ::
     SourceCode("EitherBoilerplate", eitherBoilerplate(n)) ::
     option("OptionApply", "scala.{Option", "OptionImpl", n) ::
+    option("TryApply", "scala.util.{Try", "TryImpl", n) ::
     either("EitherApply", "scala.{Either", "EitherImpl", n) ::
     Nil
   }

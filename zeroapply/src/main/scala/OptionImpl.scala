@@ -11,9 +11,12 @@ final class OptionImpl(override val c: Context) extends OptionBase {
   override protected def getValue(value: Tree, tpe: Type): Tree =
     q"$value.get"
 
-  override protected def none: Tree =
+  override protected def none(value: Tree): Tree =
     q"_root_.scala.None"
 
   override protected def wrapSome(value: Tree): Tree =
     q"_root_.scala.Some($value)"
+
+  override protected def isEmpty(value: Tree): Tree =
+    q"$value.isEmpty"
 }

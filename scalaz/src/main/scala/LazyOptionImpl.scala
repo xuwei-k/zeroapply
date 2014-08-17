@@ -11,9 +11,12 @@ final class LazyOptionImpl (override val c: Context) extends OptionBase {
   override protected def getValue(value: Tree, tpe: Type): Tree =
     q"$value.toOption.get"
 
-  override protected def none: Tree =
+  override protected def none(value: Tree): Tree =
     q"_root_.scalaz.LazyOption.lazyNone"
 
   override protected def wrapSome(value: Tree): Tree =
     q"_root_.scalaz.LazyOption.lazySome($value)"
+
+  override protected def isEmpty(value: Tree): Tree =
+    q"$value.isEmpty"
 }
