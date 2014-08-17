@@ -1,6 +1,5 @@
 package zeroapply
 
-import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
 final class LazyEitherImpl(override val c: Context) extends EitherBase {

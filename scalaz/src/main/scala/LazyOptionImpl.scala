@@ -1,7 +1,6 @@
 package zeroapply
 
 import scala.reflect.macros.blackbox.Context
-import scala.language.experimental.macros
 
 final class LazyOptionImpl (override val c: Context) extends OptionBase {
   import c.universe._
