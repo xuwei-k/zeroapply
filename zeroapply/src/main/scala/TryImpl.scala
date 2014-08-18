@@ -21,8 +21,16 @@ final class TryImpl(override val c: Context) extends OptionBase {
   override protected def none(value: Tree): Tree =
     q"$value.asInstanceOf[_root_.scala.util.Try[Nothing]]"
 
+  /**
+   * @see [[https://github.com/scala/scala/blob/v2.11.2/src/library/scala/util/Try.scala#L186-L193]]
+   */
   override protected def wrapSome(value: Tree): Tree =
-    q"_root_.scala.util.Try($value)"
+    q"""
+    try _root_.scala.util.Success($value) catch {
+      case _root_.scala.util.control.NonFatal(e) =>
+        _root_.scala.util.Failure(e)
+    }
+    """
 
   override protected def isEmpty(value: Tree): Tree =
     q"$value.isFailure"
