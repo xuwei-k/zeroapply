@@ -186,6 +186,7 @@ object build extends Build {
     generateSources := Boilerplate.scalaz(boilerplateMax),
     libraryDependencies ++= (
       ("org.scalaz" %% "scalaz-core" % ScalazVersion) ::
+      ("org.scalaz" %% "scalaz-scalacheck-binding" % ScalazVersion % "test") ::
       junit ::
       Nil
     )
