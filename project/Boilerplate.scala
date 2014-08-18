@@ -127,6 +127,7 @@ ${(2 to n).map(gen).mkString("\n")}
     option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n) ::
     either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n) ::
     either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n) ::
+    either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n) ::
     Nil
   }
 

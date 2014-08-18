@@ -17,7 +17,7 @@ abstract class EitherBase extends InlineUtil with Common with EitherBoilerplate 
     impl(params, types, leftType, right, f, true)
   }
 
-  override final def impl(params: List[Tree], types: List[Type], left: Type, right: Tree, f: Tree, isTuple: Boolean = false): Tree = {
+  override def impl(params: List[Tree], types: List[Type], left: Type, right: Tree, f: Tree, isTuple: Boolean = false): Tree = {
     val valNamesAndParams = params.zipWithIndex.map {
       case (p, index) =>
         p -> TermName(c.freshName("x" + index))
