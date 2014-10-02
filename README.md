@@ -1,4 +1,5 @@
 # zeroapply [![Build Status](https://secure.travis-ci.org/xuwei-k/zeroapply.png)](http://travis-ci.org/xuwei-k/zeroapply)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/xuwei-k/zeroapply?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 ## Zero Cost `Apply`/`Applicative` Syntax
