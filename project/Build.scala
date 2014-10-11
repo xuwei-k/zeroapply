@@ -106,7 +106,7 @@ object build extends Build {
       "-Ywarn-unused-import" ::
       Nil
     ),
-    scalaVersion := "2.11.2",
+    scalaVersion := "2.11.3",
     crossScalaVersions := scalaVersion.value :: Nil,
     scalacOptions in (Compile, doc) ++= {
       val tag = if(isSnapshot.value) gitHash else { "v" + version.value }
