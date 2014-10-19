@@ -22,7 +22,7 @@ final class TryImpl(override val c: Context) extends OptionBase {
     q"$value.asInstanceOf[_root_.scala.util.Try[Nothing]]"
 
   /**
-   * @see [[https://github.com/scala/scala/blob/v2.11.3/src/library/scala/util/Try.scala#L186-L193]]
+   * @see [[https://github.com/scala/scala/blob/v2.11.2/src/library/scala/util/Try.scala#L186-L193]]
    */
   override protected def wrapSome(value: Tree): Tree =
     q"""
