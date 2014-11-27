@@ -28,7 +28,7 @@ final class ScalazTest {
     DisjunctionApply.tuple3(-\/("a"), err, err) mustEqual -\/("a")
   }
 
-   @Test
+  @Test
   def lazyEither(): Unit = {
     import _root_.scalaz.syntax.equal._
     import _root_.scalaz.std.AllInstances._
