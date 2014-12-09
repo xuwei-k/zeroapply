@@ -11,37 +11,6 @@ object build extends Build {
     sys.process.Process("git rev-parse HEAD").lines_!.head
   ).getOrElse("master")
 
-  val sonatypeURL = "https://oss.sonatype.org/service/local/repositories/"
-
-  val updateReadme = { state: State =>
-    val extracted = Project.extract(state)
-    val scalaV = extracted get scalaBinaryVersion
-    val v = extracted get version
-    val org =  extracted get organization
-    val modules = "zeroapply" :: "zeroapply-scalaz" :: Nil
-    val snapshotOrRelease = if(extracted get isSnapshot) "snapshots" else "releases"
-    val readme = "README.md"
-    val readmeFile = file(readme)
-    val newReadme = Predef.augmentString(IO.read(readmeFile)).lines.map{ line =>
-      val matchReleaseOrSnapshot = line.contains("SNAPSHOT") == v.contains("SNAPSHOT")
-      if(line.startsWith("libraryDependencies") && matchReleaseOrSnapshot){
-        val i = modules.map("\"" + _ + "\"").indexWhere(line.contains)
-        s"""libraryDependencies += "${org}" %% "${modules(i)}" % "$v""""
-      }else if(line.contains(sonatypeURL) && matchReleaseOrSnapshot){
-        val n = extracted get (name in LocalRootProject)
-        s"- [API Documentation](${sonatypeURL}${snapshotOrRelease}/archive/${org.replace('.','/')}/${n}_${scalaV}/${v}/${n}_${scalaV}-${v}-javadoc.jar/!/index.html)"
-      }else line
-    }.mkString("", "\n", "\n")
-    IO.write(readmeFile, newReadme)
-    val git = new Git(extracted get baseDirectory)
-    git.add(readme) ! state.log
-    git.commit("update " + readme) ! state.log
-    "git diff HEAD^" ! state.log
-    state
-  }
-
-  val updateReadmeProcess: ReleaseStep = updateReadme
-
   final val ScalazVersion = "7.1.0"
   val generateBoilerplate = TaskKey[Unit]("generateBoilerplate")
   val generateSources = SettingKey[List[Boilerplate.SourceCode]]("generateSources")
@@ -59,7 +28,7 @@ object build extends Build {
       licenses
     ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
-    commands += Command.command("updateReadme")(updateReadme),
+    commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
     ReleasePlugin.ReleaseKeys.releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
@@ -67,7 +36,7 @@ object build extends Build {
       runTest,
       setReleaseVersion,
       commitReleaseVersion,
-      updateReadmeProcess,
+      UpdateReadme.updateReadmeProcess,
       tagRelease,
       ReleaseStep(
         action = { state =>
@@ -85,7 +54,7 @@ object build extends Build {
         },
         enableCrossBuild = false
       ),
-      updateReadmeProcess,
+      UpdateReadme.updateReadmeProcess,
       pushChanges
     ),
     credentials ++= PartialFunction.condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")){
@@ -158,10 +127,18 @@ object build extends Build {
 
   val junit = "com.novocode" % "junit-interface" % "0.11" % "test"
 
+  private final val zeroapplyName = "zeroapply"
+  private final val zeroapplyScalazName = "zeroapply-scalaz"
+
+  val modules: List[String] =
+    zeroapplyName ::
+    zeroapplyScalazName ::
+    Nil
+
   lazy val zeroapply = Project("zeroapply", file("zeroapply")).settings(
     baseSettings : _*
   ).settings(
-    name := "zeroapply",
+    name := zeroapplyName,
     sourceGenerators in Compile <+= buildInfo,
     buildInfoPackage := "zeroapply",
     buildInfoObject := "BuildInfoZeroApply",
@@ -176,7 +153,7 @@ object build extends Build {
   lazy val scalaz = Project("scalaz", file("scalaz")).settings(
     baseSettings : _*
   ).settings(
-    name := "zeroapply-scalaz",
+    name := zeroapplyScalazName,
     sourceGenerators in Compile <+= buildInfo,
     buildInfoPackage := "zeroapply",
     buildInfoObject := "BuildInfoZeroApplyScalaz",
