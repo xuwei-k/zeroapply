@@ -45,8 +45,14 @@ ${(2 to n).map(gen).mkString("\n")}
       val g = new Gen(i)
       import g._
         s"""
+  final def apply[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
+    macro Impl.apply$i[$ts, Z]
+
   final def apply$i[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
     macro Impl.apply$i[$ts, Z]
+
+  final def tuple[$ts]($paramsF): F[($ts)] =
+    macro Impl.tuple$i[$ts]
 
   final def tuple$i[$ts]($paramsF): F[($ts)] =
     macro Impl.tuple$i[$ts]"""
@@ -100,8 +106,14 @@ ${(2 to n).map(gen).mkString("\n")}
       val g = new Gen(i)
       import g._
         s"""
+  final def apply[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
+    macro Impl.apply$i[$ts, L, Z]
+
   final def apply$i[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
     macro Impl.apply$i[$ts, L, Z]
+
+  final def tuple[${t.mkString(", ")}, L]($paramsFL): F[L, ($ts)]=
+    macro Impl.tuple$i[$ts, L]
 
   final def tuple$i[${t.mkString(", ")}, L]($paramsFL): F[L, ($ts)]=
     macro Impl.tuple$i[$ts, L]"""
