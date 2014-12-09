@@ -123,7 +123,7 @@ object build extends Build {
       val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
       new RuleTransformer(stripTestScope).transform(node)(0)
     }
-  )
+  ) ++ Sxr.subProjectSxr(Compile, "classes.sxr")
 
   val junit = "com.novocode" % "junit-interface" % "0.11" % "test"
 
@@ -176,11 +176,22 @@ object build extends Build {
       baseSettings ++ unidocSettings ++ Seq(
         name := "zeroapply-all",
         generateSources := Nil,
-        artifacts <<= Classpaths.artifactDefs(Seq(packageDoc in Compile)),
-        packagedArtifacts <<= Classpaths.packaged(Seq(packageDoc in Compile))
+        libraryDependencies ++= {
+          if (Sxr.disableSxr) Nil
+          else Seq((libraryDependencies in scalaz).value, (libraryDependencies in zeroapply).value).flatten
+        },
+        artifacts := Nil,
+        packagedArtifacts := Map.empty,
+        artifacts <++= Classpaths.artifactDefs(Seq(packageDoc in Compile)),
+        packagedArtifacts <++= Classpaths.packaged(Seq(packageDoc in Compile)),
+        scalacOptions in UnidocKeys.unidoc += {
+          "-P:sxr:base-directory:" + (sources in UnidocKeys.unidoc in ScalaUnidoc).value.mkString(":")
+        }
       ) ++ Defaults.packageTaskSettings(
         packageDoc in Compile, (UnidocKeys.unidoc in Compile).map{_.flatMap(Path.allSubpaths)}
-      ): _*
+      ) ++ Sxr.commonSettings(Compile, "unidoc.sxr") ++ Seq(
+        Sxr.packageSxr in Compile <<= (Sxr.packageSxr in Compile).dependsOn(UnidocKeys.unidoc in Compile)
+      ) : _*
     ).aggregate(zeroapply, scalaz)
   }
 
