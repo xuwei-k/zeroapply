@@ -35,6 +35,10 @@ zeroapply.OptionApply.apply3(Option(1), Option(2), Option(3))(_ + _ + _)
 ```
 
 
+- [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22%20AND%20(a%3A%22zeroapply_2.11%22%20OR%20a%3A%22zeroapply-scalaz_2.11%22))
+- [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
+
+
 ### latest stable version
 
 ```scala
@@ -45,7 +49,21 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.1.1"
 libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.1"
 ```
 
-
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.1/zeroapply-all_2.11-0.1.1-javadoc.jar/!/index.html)
-- [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22%20AND%20(a%3A%22zeroapply_2.11%22%20OR%20a%3A%22zeroapply-scalaz_2.11%22))
-- [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
+
+
+### snapshot version
+
+```scala
+resolvers += Opts.resolver.sonatypeSnapshots
+
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.1.2-SNAPSHOT"
+```
+
+```scala
+resolvers += Opts.resolver.sonatypeSnapshots
+
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.2-SNAPSHOT"
+```
+
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.2-SNAPSHOT/zeroapply-all_2.11-0.1.2-SNAPSHOT-javadoc.jar/!/index.html)
