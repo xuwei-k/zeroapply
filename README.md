@@ -42,14 +42,14 @@ zeroapply.OptionApply.apply3(Option(1), Option(2), Option(3))(_ + _ + _)
 ### latest stable version
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.1.1"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.1.2"
 ```
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.1"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.2"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.1/zeroapply-all_2.11-0.1.1-javadoc.jar/!/index.html)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.2/zeroapply-all_2.11-0.1.2-javadoc.jar/!/index.html)
 
 
 ### snapshot version
