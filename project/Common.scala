@@ -28,6 +28,10 @@ object Common {
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
     commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
     ReleasePlugin.ReleaseKeys.releaseProcess := Seq[ReleaseStep](
+      ReleaseStep{ state =>
+        assert(Sxr.disableSxr == false)
+        state
+      },
       checkSnapshotDependencies,
       inquireVersions,
       runClean,
