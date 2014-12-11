@@ -50,6 +50,7 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.2"
 ```
 
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.2/zeroapply-all_2.11-0.1.2-javadoc.jar/!/index.html)
+- [sxr](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.2/zeroapply-all_2.11-0.1.2-sxr.jar/!/index.html)
 
 
 ### snapshot version
@@ -67,3 +68,4 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.3-SNAPS
 ```
 
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.3-SNAPSHOT/zeroapply-all_2.11-0.1.3-SNAPSHOT-javadoc.jar/!/index.html)
+- [sxr](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.3-SNAPSHOT/zeroapply-all_2.11-0.1.3-SNAPSHOT-sxr.jar/!/index.html)
