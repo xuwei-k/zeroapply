@@ -3,7 +3,7 @@ package zeroapply
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-import scalaz.{-\/, \/-}
+import scalaz.{NonEmptyList, -\/, \/-}
 
 final class ScalazTest {
 
@@ -26,6 +26,17 @@ final class ScalazTest {
     DisjunctionApply.apply3(\/-(1), -\/("a"), err)(Tuple3.apply) mustEqual -\/("a")
     DisjunctionApply.apply3(-\/(1), err, err)((_, _, _) => "") mustEqual -\/(1)
     DisjunctionApply.tuple3(-\/("a"), err, err) mustEqual -\/("a")
+  }
+
+  @Test
+  def disjunction2validationNel(): Unit = {
+    import _root_.scalaz.syntax.either._
+
+    val a = "a".right[Int]
+    val b = List(1).right[Int]
+    Disjunction2ValidationNel.tuple2(a, b) mustEqual _root_.scalaz.Success("a" -> List(1))
+    Disjunction2ValidationNel.apply2(a, b)((_, _) => Vector(9)) mustEqual _root_.scalaz.Success(Vector(9))
+    Disjunction2ValidationNel.apply3(\/-(1), -\/("x"), -\/("y"))(Tuple3.apply) mustEqual _root_.scalaz.Failure(NonEmptyList("x", "y"))
   }
 
   @Test

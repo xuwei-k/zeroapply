@@ -101,21 +101,30 @@ ${(2 to n).map(gen).mkString("\n")}
 """
   }
 
-  private def either(objectName: String, classRename: String, impl: String, n: Int): SourceCode = {
+  private def either(
+    objectName: String,
+    classRename: String,
+    impl: String,
+    n: Int,
+    returnType: (String, String) => String = (l, r) => s"F[$l, $r]"
+  ): SourceCode = {
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
+      val returnType1 = returnType("L", "Z")
+      val returnType2 = returnType("L", s"($ts)")
+
         s"""
-  final def apply[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
+  final def apply[$ts, L, Z]($paramsFL)(f: ($ts) => Z): $returnType1 =
     macro Impl.apply$i[$ts, L, Z]
 
-  final def apply$i[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
+  final def apply$i[$ts, L, Z]($paramsFL)(f: ($ts) => Z): $returnType1 =
     macro Impl.apply$i[$ts, L, Z]
 
-  final def tuple[${t.mkString(", ")}, L]($paramsFL): F[L, ($ts)]=
+  final def tuple[${t.mkString(", ")}, L]($paramsFL): ${returnType2}=
     macro Impl.tuple$i[$ts, L]
 
-  final def tuple$i[${t.mkString(", ")}, L]($paramsFL): F[L, ($ts)]=
+  final def tuple$i[${t.mkString(", ")}, L]($paramsFL): ${returnType2}=
     macro Impl.tuple$i[$ts, L]"""
     }
 
@@ -138,6 +147,7 @@ ${(2 to n).map(gen).mkString("\n")}
     option("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n) ::
     option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n) ::
     either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n) ::
+    either("Disjunction2ValidationNel", """scalaz.{\/""", "Disjunction2ValidationNelImpl", n, (l, r) => s"scalaz.ValidationNel[$l, $r]") ::
     either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n) ::
     either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n) ::
     Nil
