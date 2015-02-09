@@ -105,7 +105,7 @@ object Common {
     incOptions := incOptions.value.withNameHashing(true),
     description := "zero cost Apply/Applicative syntax",
     checkGenerate := {
-      generateBoilerplate.value
+      val _ = generateBoilerplate.value
       val lines = sys.process.Process("git diff").lines.toList
       assert(lines.isEmpty, lines.mkString("\n"))
     },
