@@ -15,6 +15,12 @@ object Common {
   val generateSources = SettingKey[List[Boilerplate.SourceCode]]("generateSources")
   val checkGenerate = TaskKey[Unit]("checkGenerate")
 
+  private[this] val unusedWarnings = (
+    "-Ywarn-unused" ::
+    "-Ywarn-unused-import" ::
+    Nil
+  )
+
   val baseSettings = ReleasePlugin.releaseSettings ++ sonatypeSettings ++ buildInfoSettings ++ Seq(
     buildInfoKeys := Seq[BuildInfoKey](
       organization,
@@ -74,12 +80,7 @@ object Common {
       "-language:higherKinds" ::
       "-language:implicitConversions" ::
       Nil
-    ),
-    scalacOptions in compile ++= (
-      "-Ywarn-unused" ::
-      "-Ywarn-unused-import" ::
-      Nil
-    ),
+    ) ::: unusedWarnings,
     scalaVersion := "2.11.6",
     crossScalaVersions := scalaVersion.value :: Nil,
     scalacOptions in (Compile, doc) ++= {
@@ -128,6 +129,8 @@ object Common {
       val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
       new RuleTransformer(stripTestScope).transform(node)(0)
     }
-  ) ++ Sxr.subProjectSxr(Compile, "classes.sxr")
+  ) ++ Sxr.subProjectSxr(Compile, "classes.sxr") ++ Seq(Compile, Test).flatMap(c =>
+    scalacOptions in (c, console) ~= {_.filterNot(unusedWarnings.toSet)}
+  )
 
 }
