@@ -23,13 +23,14 @@ final class InlineTest {
   def test1(): Unit = {
     val thread = Thread.currentThread
     import thread.getStackTrace
+    import scalaz.syntax.validation._
 
     val option = OptionApply.apply2(Option(1), Option("a"))((a, b) => getStackTrace).get
     val either = EitherApply.apply2(Right(1), Right("a"))((a, b) => getStackTrace).right.get
     val utilTry = TryApply.apply2(Try(1), Try("a"))((a, b) => getStackTrace).get
     val disjunction = DisjunctionApply.apply2(\/-(1), \/-("a"))((a, b) => getStackTrace).getOrElse(null)
     val maybe = MaybeApply.apply2(Maybe.just(1), Maybe.just("a"))((a, b) => getStackTrace).getOrElse(null)
-    val validationNel = ValidationNelApply.apply2(Success(1), Success("a"))((a, b) => getStackTrace).getOrElse(null)
+    val validationNel = ValidationNelApply.apply2(1.successNel[Int], "a".successNel[Int])((a, b) => getStackTrace).getOrElse(null)
 
     (
       option ::
