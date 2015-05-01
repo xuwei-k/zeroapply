@@ -4,7 +4,7 @@ import sbtbuildinfo.Plugin._
 object build extends Build {
 
   private final val boilerplateMax = 22
-  private final val ScalazVersion = "7.1.1"
+  private final val ScalazVersion = "7.1.2"
 
   private val junit = "com.novocode" % "junit-interface" % "0.11" % "test"
 
