@@ -4,7 +4,7 @@ import sbtrelease._
 import sbtrelease.ReleasePlugin.autoImport._
 import ReleaseStateTransformations._
 import com.typesafe.sbt.pgp.PgpKeys
-import sbtbuildinfo.Plugin._
+import sbtbuildinfo.BuildInfoKeys._
 
 object Common {
 
@@ -22,8 +22,8 @@ object Common {
     Nil
   )
 
-  val baseSettings = sonatypeSettings ++ buildInfoSettings ++ Seq(
-    buildInfoKeys := Seq[BuildInfoKey](
+  val baseSettings = sonatypeSettings ++ Seq(
+    buildInfoKeys := Seq(
       organization,
       name,
       version,

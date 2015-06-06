@@ -1,5 +1,6 @@
 import sbt._, Keys._
-import sbtbuildinfo.Plugin._
+import sbtbuildinfo.BuildInfoPlugin
+import sbtbuildinfo.BuildInfoKeys._
 
 object build extends Build {
 
@@ -18,9 +19,10 @@ object build extends Build {
 
   lazy val zeroapply = Project("zeroapply", file("zeroapply")).settings(
     Common.baseSettings : _*
+  ).enablePlugins(
+    BuildInfoPlugin
   ).settings(
     name := zeroapplyName,
-    sourceGenerators in Compile <+= buildInfo,
     buildInfoPackage := "zeroapply",
     buildInfoObject := "BuildInfoZeroApply",
     Common.generateSources := Boilerplate.zeroapply(boilerplateMax),
@@ -33,12 +35,13 @@ object build extends Build {
 
   lazy val scalaz = Project("scalaz", file("scalaz")).settings(
     Common.baseSettings : _*
+  ).enablePlugins(
+    BuildInfoPlugin
   ).settings(
     name := zeroapplyScalazName,
-    sourceGenerators in Compile <+= buildInfo,
     buildInfoPackage := "zeroapply",
     buildInfoObject := "BuildInfoZeroApplyScalaz",
-    buildInfoKeys ++= Seq[BuildInfoKey](
+    buildInfoKeys ++= Seq(
       "scalazVersion" -> ScalazVersion
     ),
     Common.generateSources := Boilerplate.scalaz(boilerplateMax),
