@@ -57,25 +57,30 @@ object build extends Build {
     import sbtunidoc.Plugin._
 
     Project("root", file(".")).settings(
-      Common.baseSettings ++ unidocSettings ++ Seq(
-        name := "zeroapply-all",
-        Common.generateSources := Nil,
-        libraryDependencies ++= {
-          if (Sxr.disableSxr) Nil
-          else Seq((libraryDependencies in scalaz).value, (libraryDependencies in zeroapply).value).flatten
-        },
-        artifacts := Nil,
-        packagedArtifacts := Map.empty,
-        artifacts <++= Classpaths.artifactDefs(Seq(packageDoc in Compile)),
-        packagedArtifacts <++= Classpaths.packaged(Seq(packageDoc in Compile)),
-        scalacOptions in UnidocKeys.unidoc += {
-          "-P:sxr:base-directory:" + (sources in UnidocKeys.unidoc in ScalaUnidoc).value.mkString(":")
-        }
-      ) ++ Defaults.packageTaskSettings(
+      Common.baseSettings ++ unidocSettings
+    ).settings(
+      name := "zeroapply-all",
+      Common.generateSources := Nil,
+      libraryDependencies ++= {
+        if(Sxr.enableSxr.value) {
+          Seq(
+            (libraryDependencies in scalaz).value,
+            (libraryDependencies in zeroapply).value
+          ).flatten
+        } else Nil
+      },
+      artifacts := Nil,
+      packagedArtifacts := Map.empty,
+      artifacts <++= Classpaths.artifactDefs(Seq(packageDoc in Compile)),
+      packagedArtifacts <++= Classpaths.packaged(Seq(packageDoc in Compile))
+    ).settings(
+      Sxr.settings1
+    ).settings(
+      Defaults.packageTaskSettings(
         packageDoc in Compile, (UnidocKeys.unidoc in Compile).map{_.flatMap(Path.allSubpaths)}
-      ) ++ Sxr.commonSettings(Compile, "unidoc.sxr") ++ Seq(
-        Sxr.packageSxr in Compile <<= (Sxr.packageSxr in Compile).dependsOn(UnidocKeys.unidoc in Compile)
-      ) : _*
+      )
+    ).settings(
+      Sxr.settings2
     ).aggregate(zeroapply, scalaz)
   }
 

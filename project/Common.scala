@@ -22,6 +22,8 @@ object Common {
     Nil
   )
 
+  private[this] val Scala211 = "2.11.7"
+
   val baseSettings = sonatypeSettings ++ Seq(
     buildInfoKeys := Seq(
       organization,
@@ -36,7 +38,7 @@ object Common {
     commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
     releaseProcess := Seq[ReleaseStep](
       ReleaseStep{ state =>
-        assert(Sxr.disableSxr == false)
+        assert((Sxr.enableSxr in LocalRootProject).value)
         state
       },
       checkSnapshotDependencies,
@@ -82,8 +84,8 @@ object Common {
       "-language:implicitConversions" ::
       Nil
     ) ::: unusedWarnings,
-    scalaVersion := "2.11.7",
-    crossScalaVersions := scalaVersion.value :: Nil,
+    scalaVersion := Scala211,
+    crossScalaVersions := Scala211 :: "2.12.0-M2" :: Nil,
     scalacOptions in (Compile, doc) ++= {
       val tag = if(isSnapshot.value) gitHash else { "v" + version.value }
       Seq(
@@ -130,8 +132,6 @@ object Common {
       val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
       new RuleTransformer(stripTestScope).transform(node)(0)
     }
-  ) ++ Sxr.subProjectSxr(Compile, "classes.sxr") ++ Seq(Compile, Test).flatMap(c =>
-    scalacOptions in (c, console) ~= {_.filterNot(unusedWarnings.toSet)}
   )
 
 }

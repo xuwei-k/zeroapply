@@ -16,13 +16,19 @@ cache:
 script:
   - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
   - git show --oneline --check
-  - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk7) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
-  - sbt $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "" ; else echo "-Ddisable_sxr"; fi) ++${TRAVIS_SCALA_VERSION} checkGenerate test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "publish" ; fi)
+  - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
+  - wget https://raw.githubusercontent.com/paulp/sbt-extras/b9c8cb27/sbt && chmod +x ./sbt
+  - ./sbt ++${TRAVIS_SCALA_VERSION} checkGenerate test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "publish" ; fi)
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
-  - if [[ ${JAVA_HOME} == $(jdk_switcher home oraclejdk7) ]]; then rm -rf $HOME/.ivy2/cache ; fi
+  - if [[ ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) ]]; then rm -rf $HOME/.ivy2/cache ; fi
 
 env:
   global:
     - secure: qeoOx/wOZnap26jlwPgQWxiXPnueijrbk7Op+nPg2utxnFL8L9Ps3udO+eAh4le5oYBxD0C5QqgEcKic+Vfdke+a3grV1IrJNN0gHR8b2y7ODn4fjiumjiwdUPr59d1YRW6O6FeUbOdVAe6uc30RmnX+MBZQSoP8hTlABIleqB0=
     - secure: foA9PR1xb4SNyjyp89QSYXqVaI9NJQhRXLW17kQ2Ei0MkOqNIeRJVopVdXfpX9lH71HIGTxfthpesLfKERRAgpelaMECaPndKdNkHbp42m9DBMpA3FftcuEUCzAChQcD/AEVNignNNx2P28+dE9H6hv9dxPLfYSv9m0pGd0GN+4=
+
+matrix:
+  include:
+    - scala: 2.12.0-M2
+      jdk: oraclejdk8
