@@ -5,7 +5,7 @@ import sbtbuildinfo.BuildInfoKeys._
 object build extends Build {
 
   private final val boilerplateMax = 22
-  private final val ScalazVersion = "7.1.3"
+  val scalazVersion = SettingKey[String]("scalazVersion")
 
   private val junit = "com.novocode" % "junit-interface" % "0.11" % "test"
 
@@ -42,12 +42,13 @@ object build extends Build {
     buildInfoPackage := "zeroapply",
     buildInfoObject := "BuildInfoZeroApplyScalaz",
     buildInfoKeys ++= Seq(
-      "scalazVersion" -> ScalazVersion
+      scalazVersion
     ),
     Common.generateSources := Boilerplate.scalaz(boilerplateMax),
+    scalazVersion := "7.1.3",
     libraryDependencies ++= (
-      ("org.scalaz" %% "scalaz-core" % ScalazVersion) ::
-      ("org.scalaz" %% "scalaz-scalacheck-binding" % ScalazVersion % "test") ::
+      ("org.scalaz" %% "scalaz-core" % scalazVersion.value) ::
+      ("org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion.value % "test") ::
       junit ::
       Nil
     )
