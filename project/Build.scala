@@ -45,7 +45,7 @@ object build extends Build {
       scalazVersion
     ),
     Common.generateSources := Boilerplate.scalaz(boilerplateMax),
-    scalazVersion := "7.1.3",
+    scalazVersion := "7.1.4",
     libraryDependencies ++= (
       ("org.scalaz" %% "scalaz-core" % scalazVersion.value) ::
       ("org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion.value % "test") ::
