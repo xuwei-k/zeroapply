@@ -18,7 +18,7 @@ trait Common {
   }
 
   protected final def tuple(params: List[Tree], types: List[Type]): Tree = {
-    val names = (0 until params.size).map(i => TermName(c.freshName("p" + i))).toList
+    val names = params.indices.map(i => TermName(c.freshName("p" + i))).toList
     Function(
       names.zipWithIndex.map{ case (name, i)  =>
         val t = TypeTree(types(i))
