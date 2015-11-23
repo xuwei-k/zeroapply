@@ -38,6 +38,42 @@ zeroapply.OptionApply.apply3(Option(1), Option(2), Option(3))(_ + _ + _)
 - [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22%20AND%20(a%3A%22zeroapply_2.11%22%20OR%20a%3A%22zeroapply-scalaz_2.11%22))
 - [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
 
+## [`scalaz.Equal`](https://github.com/scalaz/scalaz/blob/v7.1.5/core/src/main/scala/scalaz/Equal.scala) and [`scalaz.Order`](https://github.com/scalaz/scalaz/blob/v7.1.5/core/src/main/scala/scalaz/Order.scala) macro
+
+```scala
+import scalaz._, std.AllInstances._
+
+case class Foo[A, B](a: A, b: B, c: Int)
+
+object Foo {
+  implicit def instance[A: Order, B: Order]: Order[Foo[A, B]] =
+    zeroapply.CaseClass.order[Foo[A, B]]
+}
+```
+
+↓
+
+```scala
+new Order[Foo[A, B]] {
+  override def equalIsNatural =
+    Equal[A].equalIsNatural && Equal[B].equalIsNatural && Equal[Int].equalIsNatural
+
+  override def equal(x1: Foo[A, B], x2: Foo[A, B]) =
+    Equal[A].equal(x1.a, x2.a) && Equal[B].equal(x1.b, x2.b) && Equal[Int].equal(x1.c, x2.c)
+
+  override def order(x1: Foo[A, B], x2: Foo[A, B]) =
+    Order[A].order(x1.a, x2.a) match {
+      case Ordering.EQ =>
+        Order[B].order(x1.b, x2.b) match {
+          case Ordering.EQ => Order[Int].order(x1.c, x2.c)
+          case z => z
+        }
+      case z =>
+        z
+    }
+}
+
+```
 
 ### latest stable version
 
