@@ -1,4 +1,13 @@
-scalacOptions ++= Seq("-deprecation", "-Xlint", "-unchecked", "-language:_")
+scalacOptions ++= (
+  "-deprecation" ::
+  "-unchecked" ::
+  "-Xlint" ::
+  "-language:existentials" ::
+  "-language:higherKinds" ::
+  "-language:implicitConversions" ::
+  "-Yno-adapted-args" ::
+  Nil
+)
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
 
