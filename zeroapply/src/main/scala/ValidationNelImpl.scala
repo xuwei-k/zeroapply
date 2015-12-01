@@ -51,7 +51,7 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
     val tree = q"""
       ..$valList
 
-      var $failure : _root_.scala.List[$left] = _root_.scala.Nil
+      var $failure : _root_.scalaz.IList[$left] = _root_.scalaz.IList.empty[$left]
 
       ..${valNames.reverse.map{ case name =>
         q"""
@@ -63,10 +63,11 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
         """
       }}
 
-      if($failure eq _root_.scala.Nil){
-        ${wrapRight(ifSuccess)}
-      }else{
-        _root_.scalaz.Failure(_root_.scalaz.NonEmptyList.nel($failure.head, $failure.tail))
+      $failure match {
+        case _root_.scalaz.INil() =>
+          ${wrapRight(ifSuccess)}
+        case  _root_.scalaz.ICons(h, t) =>
+          _root_.scalaz.Failure(_root_.scalaz.NonEmptyList.nel(h, t))
       }
     """
     tree

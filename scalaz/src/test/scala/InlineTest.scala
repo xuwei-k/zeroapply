@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import scala.util.Try
 import scalaz._
+import scalaz.syntax.validation._
 
 final class InlineTest {
 
@@ -29,7 +30,7 @@ final class InlineTest {
     val utilTry = TryApply.apply2(Try(1), Try("a"))((a, b) => getStackTrace).get
     val disjunction = DisjunctionApply.apply2(\/-(1), \/-("a"))((a, b) => getStackTrace).getOrElse(null)
     val maybe = MaybeApply.apply2(Maybe.just(1), Maybe.just("a"))((a, b) => getStackTrace).getOrElse(null)
-    val validationNel = ValidationNelApply.apply2(Success(1), Success("a"))((a, b) => getStackTrace).getOrElse(null)
+    val validationNel = ValidationNelApply.apply2(1.successNel[Int], "a".successNel[Int])((a, b) => getStackTrace).getOrElse(null)
 
     (
       option ::
