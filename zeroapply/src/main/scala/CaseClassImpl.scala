@@ -1,10 +1,84 @@
 package zeroapply
 
+import scala.annotation.tailrec
 import scala.reflect.macros.blackbox
+
+object PlayJson {
+  type Key = playjson.JsonKey @annotation.meta.field
+}
 
 class CaseClassImpl(val c: blackbox.Context) {
 
   import c.universe._
+
+  private def fieldsOf(tpe: Type): Map[TermSymbol, (String, Type)] = {
+    val explicitLabels = tpe.decls.flatMap { sym =>
+      for {
+        a <- sym.annotations.find(_.tree.tpe =:= typeOf[PlayJson.Key])
+      } yield {
+        val label = a.tree.children.collectFirst {
+          case Literal(Constant(value: String)) => value
+        }.getOrElse {
+          c.abort(c.enclosingPosition, s"$tpe.${sym.name} has a @Key annotation, but the argument is not a constant String")
+        }
+        (sym.fullName, label)
+      }
+    }.toMap
+
+    tpe.decls.collect {
+      case m: TermSymbol =>
+        explicitLabels.get(m.fullName).map(_ -> m)
+    }.flatten.map{ case (name, sym) =>
+      sym -> ((name, sym.typeSignatureIn(tpe).finalResultType))
+    }.toMap
+  }
+
+  private val ReadsApplicative = q"_root_.play.api.libs.functional.syntax.functionalCanBuildApplicative[_root_.play.api.libs.json.Reads]"
+  private val ReadsObj = q"_root_.play.api.libs.json.Reads"
+  private val JsPath = q"_root_.play.api.libs.json.JsPath"
+  private val Extractor = q"_root_.play.api.libs.functional.~"
+
+  def reads[A: c.WeakTypeTag]: c.Tree = {
+    val A = weakTypeOf[A]
+    val fields = A.decls.filter { m => m.isTerm && m.asTerm.isCaseAccessor && m.isMethod }
+    val x = fieldsOf(A)
+    val y = fields.map{ f =>
+      f -> x.getOrElse(f.asTerm, c.abort(c.enclosingPosition, s"the `${f.asTerm.name}` field does not have @Key annotation"))
+    }.toList
+
+    @tailrec
+    def checkDuplicates(list: List[String], set: Set[String]): Unit = list match {
+      case aa :: tail =>
+        if(set.contains(aa)) {
+          c.abort(c.enclosingPosition, s"duplicate keys `$aa`")
+        } else {
+          checkDuplicates(tail, set + aa)
+        }
+      case Nil =>
+    }
+    checkDuplicates(y.map(_._2._1), Set.empty)
+
+    val z = y.map{ case (f, (key, t)) =>
+      val s = Literal(Constant(key))
+      t.typeArgs match {
+        case tt :: Nil if t.typeConstructor =:= typeOf[Option[_]].typeConstructor =>
+          q"""$ReadsObj.nullable[${t.typeArgs.head}]($JsPath \ $s)"""
+        case _ =>
+          q"""$ReadsObj.at[$t]($JsPath \ $s)"""
+      }
+    }
+
+    val d = z.tail.foldLeft(z.head: c.Tree)((a, as) => q"$ReadsApplicative.apply($a, $as)")
+    val xs = List.fill(fields.size)(TermName(c.freshName("x")))
+
+    val a = pq"$Extractor(${xs(0)}, ${xs(1)})"
+    val r = q"""$d.map{
+      case ${xs.tail.tail.foldLeft(a)((s, t) => pq"$Extractor($s, $t)")} =>
+        new $A(..$xs)
+    }"""
+    println(showCode(r))
+    r
+  }
 
   def equalImpl[Z: c.WeakTypeTag]: c.Tree = {
     val Z = weakTypeOf[Z]

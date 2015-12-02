@@ -47,6 +47,7 @@ object build extends Build {
     Common.generateSources := Boilerplate.scalaz(boilerplateMax),
     scalazVersion := "7.2.1",
     libraryDependencies ++= (
+      ("com.typesafe.play" %% "play-json" % "2.4.4") ::
       ("org.scalaz" %% "scalaz-core" % scalazVersion.value) ::
       ("org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion.value % "test") ::
       junit ::

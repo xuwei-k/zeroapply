@@ -6,7 +6,6 @@ scala:
 sudo: false
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 cache:
@@ -27,8 +26,3 @@ env:
   global:
     - secure: qeoOx/wOZnap26jlwPgQWxiXPnueijrbk7Op+nPg2utxnFL8L9Ps3udO+eAh4le5oYBxD0C5QqgEcKic+Vfdke+a3grV1IrJNN0gHR8b2y7ODn4fjiumjiwdUPr59d1YRW6O6FeUbOdVAe6uc30RmnX+MBZQSoP8hTlABIleqB0=
     - secure: foA9PR1xb4SNyjyp89QSYXqVaI9NJQhRXLW17kQ2Ei0MkOqNIeRJVopVdXfpX9lH71HIGTxfthpesLfKERRAgpelaMECaPndKdNkHbp42m9DBMpA3FftcuEUCzAChQcD/AEVNignNNx2P28+dE9H6hv9dxPLfYSv9m0pGd0GN+4=
-
-matrix:
-  include:
-    - scala: 2.12.0-M3
-      jdk: oraclejdk8
