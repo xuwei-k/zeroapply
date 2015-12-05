@@ -6,13 +6,13 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
   import c.universe._
 
   protected def getValDef(name: TermName, left: Type, right: Type, body: Tree) =
-    q"val $name: scalaz.ValidationNel[$left, $right] = $body"
+    q"val $name: _root_.scalaz.ValidationNel[$left, $right] = $body"
 
   protected def rightValue(value: Tree, left: Type, right: Type): Tree =
     q"$value.asInstanceOf[scalaz.Success[$right]].a"
 
   protected def wrapRight(value: Tree): Tree =
-    q"scalaz.Success($value)"
+    q"_root_.scalaz.Success($value)"
 
   protected def asEither(value: Tree, left: Type, right: Tree): Tree =
     ???
@@ -51,22 +51,22 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
     val tree = q"""
       ..$valList
 
-      var $failure : List[$left] = Nil
+      var $failure : _root_.scala.List[$left] = _root_.scala.Nil
 
       ..${valNames.reverse.map{ case name =>
         q"""
-          if($name.isInstanceOf[scalaz.Failure[_]]){
-            val nel = $name.asInstanceOf[scalaz.Failure[_root_.scalaz.NonEmptyList[$left]]].e
+          if($name.isInstanceOf[_root_.scalaz.Failure[_]]){
+            val nel = $name.asInstanceOf[_root_.scalaz.Failure[_root_.scalaz.NonEmptyList[$left]]].e
             $failure :::= nel.tail
             $failure ::= nel.head
           }
         """
       }}
 
-      if($failure eq Nil){
+      if($failure eq _root_.scala.Nil){
         ${wrapRight(ifSuccess)}
       }else{
-        scalaz.Failure(scalaz.NonEmptyList.nel($failure.head, $failure.tail))
+        _root_.scalaz.Failure(_root_.scalaz.NonEmptyList.nel($failure.head, $failure.tail))
       }
     """
     tree
