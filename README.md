@@ -105,3 +105,7 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.5-SNAPS
 
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.5-SNAPSHOT/zeroapply-all_2.11-0.1.5-SNAPSHOT-javadoc.jar/!/index.html)
 - [sxr](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.1.5-SNAPSHOT/zeroapply-all_2.11-0.1.5-SNAPSHOT-sxr.jar/!/index.html)
+
+### for scalaz 7.1.x
+
+<https://github.com/xuwei-k/zeroapply/tree/0.1.x>
