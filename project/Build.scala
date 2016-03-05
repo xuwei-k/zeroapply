@@ -1,6 +1,6 @@
 import sbt._, Keys._
 import sbtbuildinfo.BuildInfoPlugin
-import sbtbuildinfo.BuildInfoKeys._
+import sbtbuildinfo.BuildInfoPlugin.autoImport._
 
 object build extends Build {
 
