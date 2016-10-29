@@ -7,11 +7,11 @@ object Sxr {
   val sxr = TaskKey[File]("packageSxr")
 
   private[this] def ifSxrAvailable[A](key: SettingKey[A], value: Def.Initialize[A]): Setting[A] =
-    key <<= (key, enableSxr, value){ (k, enable, vv) =>
-      if (enable) {
-        vv
+    key := {
+      if (enableSxr.value) {
+        value.value
       } else {
-        k
+        key.value
       }
     }
 
@@ -37,7 +37,10 @@ object Sxr {
   )
 
   val settings2: Seq[Setting[_]] = Defaults.packageTaskSettings(
-    sxr in Compile, (crossTarget in Compile, UnidocKeys.unidoc in Compile).map{ (dir, _) =>
+    sxr in Compile,
+    Def.task{
+      val dir = (crossTarget in Compile).value
+      val _ = (UnidocKeys.unidoc in Compile).value
       Path.allSubpaths(dir / "unidoc.sxr").toSeq
     }
   ) ++ Seq[Setting[_]](
