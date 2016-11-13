@@ -11,8 +11,13 @@ final class EitherImpl(override val c: Context) extends EitherBase{
   override protected def wrapRight(value: Tree) =
     q"_root_.scala.Right($value)"
 
-  override protected def rightValue(value: Tree, left: Type, right: Type) =
-    q"$value.asInstanceOf[_root_.scala.Right[$left, $right]].b"
+  override protected def rightValue(value: Tree, left: Type, right: Type) = {
+    if(scala.util.Properties.versionNumberString.startsWith("2.11")) {
+      q"$value.asInstanceOf[_root_.scala.Right[$left, $right]].b"
+    } else {
+      q"$value.asInstanceOf[_root_.scala.Right[$left, $right]].value"
+    }
+  }
 
   override protected def asEither(value: Tree, left: Type, right: Tree) =
     q"$value.asInstanceOf[_root_.scala.Either[$left, $right]]"
