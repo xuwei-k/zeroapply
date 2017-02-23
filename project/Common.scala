@@ -1,5 +1,4 @@
 import sbt._, Keys._
-import xerial.sbt.Sonatype._
 import sbtrelease._
 import sbtrelease.ReleasePlugin.autoImport._
 import ReleaseStateTransformations._
@@ -24,7 +23,7 @@ object Common {
 
   private[this] val Scala211 = "2.11.8"
 
-  val baseSettings = sonatypeSettings ++ Seq(
+  val baseSettings = Seq(
     fullResolvers ~= {_.filterNot(_.name == "jcenter")},
     buildInfoKeys := Seq(
       organization,
@@ -59,13 +58,7 @@ object Common {
       ),
       setNextVersion,
       commitNextVersion,
-      ReleaseStep(
-        action = { state =>
-          val extracted = Project extract state
-          extracted.runAggregated(SonatypeKeys.sonatypeReleaseAll in Global in extracted.get(thisProjectRef), state)
-        },
-        enableCrossBuild = false
-      ),
+      releaseStepCommand("sonatypeReleaseAll"),
       UpdateReadme.updateReadmeProcess,
       pushChanges
     ),
