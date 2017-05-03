@@ -28,7 +28,7 @@ lazy val scalaz = Project("scalaz", file("scalaz")).settings(
     scalazVersion
   ),
   Common.generateSources := Boilerplate.scalaz(boilerplateMax),
-  scalazVersion := "7.2.11",
+  scalazVersion := "7.2.12",
   libraryDependencies ++= (
     ("org.scalaz" %% "scalaz-core" % scalazVersion.value) ::
     ("org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion.value % "test") ::
