@@ -1,14 +1,16 @@
 package zeroapply
 
-import org.scalacheck.{Prop, Properties}
+import scalaprops._
+import scalaprops.Property.forAll
 import scalaz.{Equal, Maybe, Apply, \/, LazyOption, LazyEither, IList}
 import scalaz.std.list._
 import scalaz.std.anyVal._
 import scalaz.std.string._
-import scalaz.scalacheck.ScalazArbitrary._
 import scalaz.std.tuple._
 
-object ScalacheckTest extends Properties("zeroapply") {
+object ZeroapplyScalapropsTest extends Scalaprops {
+
+  private[this] implicit val stringGen = Gen.asciiString
 
   private implicit class AssertOps[A](private val a1: A) extends AnyVal{
     def mustEqual(a2: A)(implicit A: Equal[A]): Boolean = {
@@ -18,7 +20,7 @@ object ScalacheckTest extends Properties("zeroapply") {
     }
   }
 
-  property("Option") = Prop.forAll{
+  val option = forAll{
     (a1: Option[Int], a2: Option[String], a3: Option[List[Int]]) =>
 
     import scalaz.std.option._
@@ -27,14 +29,14 @@ object ScalacheckTest extends Properties("zeroapply") {
     OptionApply.apply3(a1, a2, a3)(Tuple3.apply) mustEqual Apply[Option].apply3(a1, a2, a3)(Tuple3.apply)
   }
 
-  property("LazyOption") = Prop.forAll{
+  val lazyOption = forAll{
     (a1: LazyOption[String], a2: LazyOption[Int], a3: LazyOption[Int \/ Byte]) =>
 
     LazyOptionApply.tuple3(a1, a2, a3) mustEqual Apply[LazyOption].tuple3(a1, a2, a3)
     LazyOptionApply.apply3(a1, a2, a3)(Tuple3.apply) mustEqual Apply[LazyOption].apply3(a1, a2, a3)(Tuple3.apply)
   }
 
-  property("Maybe") = Prop.forAll{
+  val maybe = forAll{
     (a1: Maybe[Int], a2: Maybe[String], a3: Maybe[List[Int]]) =>
 
     MaybeApply.tuple3(a1, a2, a3) mustEqual Apply[Maybe].tuple3(a1, a2, a3)
@@ -43,7 +45,7 @@ object ScalacheckTest extends Properties("zeroapply") {
 
   type EitherInt[A] = Either[Int, A]
 
-  property("Either") = Prop.forAll{
+  val either = forAll{
     (a1: EitherInt[Int], a2: EitherInt[String], a3: EitherInt[List[Int]]) =>
 
     import scalaz.std.either._
@@ -54,7 +56,7 @@ object ScalacheckTest extends Properties("zeroapply") {
 
   type LazyEitherInt[A] = LazyEither[Int, A]
 
-  property("LazyEither") = Prop.forAll{
+  val lazyEither = forAll{
     (a1: LazyEitherInt[Int], a2: LazyEitherInt[String], a3: LazyEitherInt[IList[Byte]]) =>
 
     implicit def lazyEitherEq[A: Equal, B: Equal]: Equal[LazyEither[A, B]] =
@@ -66,7 +68,7 @@ object ScalacheckTest extends Properties("zeroapply") {
 
   type DisjunctionInt[A] = Int \/ A
 
-  property("""\/""") = Prop.forAll{
+  val disjunction = forAll{
     (a1: DisjunctionInt[Int], a2: DisjunctionInt[String], a3: DisjunctionInt[List[Int]]) =>
 
     DisjunctionApply.tuple3(a1, a2, a3) mustEqual Apply[DisjunctionInt].tuple3(a1, a2, a3)
@@ -75,7 +77,7 @@ object ScalacheckTest extends Properties("zeroapply") {
 
   type ValidationNenInt[A] = scalaz.ValidationNel[Int, A]
 
-  property("ValidationNel") = Prop.forAll {
+  val validationNel = forAll {
     (a1: ValidationNenInt[Int], a2: ValidationNenInt[String], a3: ValidationNenInt[Maybe[Int]]) =>
 
     ValidationNelApply.tuple3(a1, a2, a3) mustEqual Apply[ValidationNenInt].tuple3(a1, a2, a3)

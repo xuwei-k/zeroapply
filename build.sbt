@@ -29,9 +29,10 @@ lazy val scalaz = Project("scalaz", file("scalaz")).settings(
   ),
   Common.generateSources := Boilerplate.scalaz(boilerplateMax),
   scalazVersion := "7.2.14",
+  scalapropsSettings,
+  scalapropsVersion := "0.5.0",
   libraryDependencies ++= (
     ("org.scalaz" %% "scalaz-core" % scalazVersion.value) ::
-    ("org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion.value % "test") ::
     junit ::
     Nil
   )
