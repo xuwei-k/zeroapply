@@ -25,6 +25,12 @@ object Common {
 
   val baseSettings = Seq(
     fullResolvers ~= {_.filterNot(_.name == "jcenter")},
+    publishTo := Some(
+      if (isSnapshot.value)
+        Opts.resolver.sonatypeSnapshots
+      else
+        Opts.resolver.sonatypeStaging
+    ),
     buildInfoKeys := Seq(
       organization,
       name,

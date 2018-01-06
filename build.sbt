@@ -40,7 +40,6 @@ lazy val scalaz = Project("scalaz", file("scalaz")).settings(
 
 lazy val root = Project("root", file(".")).settings(
   Common.baseSettings,
-  unidocSettings,
   name := "zeroapply-all",
   Common.generateSources := Nil,
   libraryDependencies ++= {
@@ -57,7 +56,9 @@ lazy val root = Project("root", file(".")).settings(
   packagedArtifacts ++= Classpaths.packaged(Seq(packageDoc in Compile)).value,
   Sxr.settings1,
   Defaults.packageTaskSettings(
-    packageDoc in Compile, (UnidocKeys.unidoc in Compile).map{_.flatMap(Path.allSubpaths)}
+    packageDoc in Compile, (unidoc in Compile).map{_.flatMap(Path.allSubpaths)}
   ),
   Sxr.settings2
+).enablePlugins(
+  ScalaUnidocPlugin
 ).aggregate(zeroapply, scalaz)
