@@ -28,7 +28,7 @@ lazy val scalaz = Project("scalaz", file("scalaz")).settings(
     scalazVersion
   ),
   Common.generateSources := Boilerplate.scalaz(boilerplateMax),
-  scalazVersion := "7.2.16",
+  scalazVersion := "7.2.18",
   scalapropsSettings,
   scalapropsVersion := "0.5.2",
   libraryDependencies ++= (
