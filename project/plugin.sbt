@@ -9,7 +9,7 @@ scalacOptions ++= (
   Nil
 )
 
-addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.2.5")
+addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.2.6")
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
 
