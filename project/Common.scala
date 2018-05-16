@@ -82,9 +82,11 @@ object Common {
       "-language:existentials" ::
       "-language:higherKinds" ::
       "-language:implicitConversions" ::
-      "-Yno-adapted-args" ::
       Nil
     ) ::: unusedWarnings,
+    scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+      case Some((2, v)) if v <= 12 => "-Yno-adapted-args"
+    }.toList,
     scalaVersion := Scala211,
     crossScalaVersions := Scala211 :: "2.12.6" :: "2.13.0-M3" :: "2.13.0-M4-pre-20d3c21" :: Nil,
     scalacOptions in (Compile, doc) ++= {
