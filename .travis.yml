@@ -33,6 +33,8 @@ matrix:
   include:
     - scala: 2.12.6
       jdk: oraclejdk8
+    - scala: 2.13.0-M5
+      jdk: oraclejdk8
     - scala: 2.13.0-M4
       jdk: oraclejdk8
 
