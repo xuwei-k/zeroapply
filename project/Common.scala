@@ -87,7 +87,7 @@ object Common {
       case Some((2, v)) if v <= 12 => "-Yno-adapted-args"
     }.toList,
     scalaVersion := Scala211,
-    crossScalaVersions := Scala211 :: "2.12.6" :: "2.13.0-M4" :: "2.13.0-M5" :: Nil,
+    crossScalaVersions := Scala211 :: "2.12.7" :: "2.13.0-M4" :: "2.13.0-M5" :: Nil,
     scalacOptions in (Compile, doc) ++= {
       val tag = if(isSnapshot.value) gitHash else { "v" + version.value }
       Seq(
