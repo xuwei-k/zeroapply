@@ -1,12 +1,14 @@
 language: scala
 
 scala:
-  - 2.11.12
+- 2.11.12
+- 2.12.7
+- 2.13.0-M5
+- 2.13.0-M4
 
 sudo: false
 
 jdk:
-  - openjdk7
   - oraclejdk8
 
 cache:
@@ -18,27 +20,13 @@ script:
   - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
   - git show --oneline --check
   - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
-  - wget https://raw.githubusercontent.com/paulp/sbt-extras/b9c8cb27/sbt && chmod +x ./sbt
-  - ./sbt ++${TRAVIS_SCALA_VERSION} checkGenerate test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "publish" ; fi)
+  - sbt ++${TRAVIS_SCALA_VERSION} checkGenerate test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "publish" ; fi)
+
+before_cache:
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
-  - if [[ ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) ]]; then rm -rf $HOME/.ivy2/cache ; fi
 
 env:
   global:
   - secure: cojZdfeUOsk9A8pKqp86Rr1KZfkx8MfIYDVYfKgDolZaNrDrxN6P7uHk3WZ2pNqiPOkYdl1u1xuBuy/A2Wm3EH6MmvgVWlHjznq4Jx3eX6e0YdRXSZaAjdfd/AdYD8I5ld7uwl833ReoqqPjPjeGbeAkkAqhIjxcR4mLYuyA4fAm6CQd5TTg1GxVF3RJvdlG80W7mbnLTJXiPuDE0wdiQHsWYTmBHpFpmfe4Af6bK4y69oFbPdjwvxJzeIgYIycfPH/mPW6HW1/htmllhM+4qc6FrpTfLvVZpF3BhiODFLK7hPt91uAfBFsHbZyv2qTLaG6xm2RCH7frxaolDE0ij4ffK2Mgk3uHSb2sKnEvgo2hpmoV8GSn9MYYRR4YXyydZnEnW42y8Y6Qc8mcrkAeREzOVmGZ35w1qMfy2HGun4m96y5GqvCdovE8EjysPsTtidhU4ss60f8IUz7NFwcyvG5Degvh3MTSWvtt04nPI795uPZ5E7ss5EU8fEay0Qg4N2yGl5IAcMR+YjPS5A3h5dbVqCZPvswrlzpFNeDGoJZX3gDPpYpEi7mW5pGZYTfKqnxGAGvUdN/zDzJPyEN2x2qiczmE/AdufHoFa7KNOZ+NezE1FbxvLOQL0FBlpMP/cQfquJkkPYYaQpsSvTq6TbB46iE0fiYufULOSA9sRKA=
   - secure: gIRC//DjOcVc7wxc3AYzmTGApjNiRj6JzZ3DkmZQ9tkg0NUdEjBw9aeskyrk/NX0MTRuVkwZQmR4T1vLjV3WTe2WDYnE27zS7rezYRqMporxThOZKTAjED33EkazQllhvvVoh+St+pUHssziP/jb88WgvY6zKE8LzZj0B94e5/3tWhmBQRhW/SykYJabRBvqFnzkRUrR0RX/vwxrShRRwr8ODAh6wIsk7YUJffnuLfxuNaqs+IwepH6hjsEf9rMgoCDJ2X0ilz2zGEM/BHaQ5u4gqYxbJ0LKTg85tFo/LcAeqPXkQdTxNdeTZleA3Sq3wpUOC3i38LS5v8S58mxDYzRXEefXRkNOGkB5bZoZ3ga7oBVi904YlJI9SdMolOEAyNBzoUHhsAazczNJPu7lxc4niu6OhqShx7GestIBbkwIZhMWqpqypil9EfV8h23cQmjaYx60HQfP2tOfpFWVmt0mqstrghS3Ksn1G4VJlmbP28EdlEQSZIrJZB98I/zCYPIDuWSCUKeS8/Qu1Xfpy6AWjdtYR5bgeEQLJdiAL/HisDQxlmZZiGF/u6XnaP0UbdqhNKGjSOkszJu6sCjgIagp4de8k+rqyC9+HOH8t98JGn8OBb+HHm9a9OS4XwHHFAtce3EIOlWgYP8h4soh0QZkUruWUb2vkyHN73xL+V8=
-
-matrix:
-  include:
-    - scala: 2.12.7
-      jdk: oraclejdk8
-    - scala: 2.13.0-M5
-      jdk: oraclejdk8
-    - scala: 2.13.0-M4
-      jdk: oraclejdk8
-
-addons:
-  apt:
-    packages:
-    - oracle-java8-installer

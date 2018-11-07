@@ -8,7 +8,7 @@ import sbtbuildinfo.BuildInfoKeys._
 object Common {
 
   def gitHash: String = scala.util.Try(
-    sys.process.Process("git rev-parse HEAD").lines_!.head
+    sys.process.Process("git rev-parse HEAD").lineStream_!.head
   ).getOrElse("master")
 
   val generateBoilerplate = TaskKey[Unit]("generateBoilerplate")
@@ -111,11 +111,10 @@ object Common {
       </scm>
     ),
     fork in Test := true,
-    incOptions := incOptions.value.withNameHashing(true),
     description := "zero cost Apply/Applicative syntax",
     checkGenerate := {
       val _ = generateBoilerplate.value
-      val lines = sys.process.Process("git diff").lines.toList
+      val lines = sys.process.Process("git diff").lineStream.toList
       assert(lines.isEmpty, lines.mkString("\n"))
     },
     generateBoilerplate := {
