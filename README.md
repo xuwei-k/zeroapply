@@ -1,5 +1,4 @@
-# zeroapply [![Build Status](https://secure.travis-ci.org/xuwei-k/zeroapply.png)](http://travis-ci.org/xuwei-k/zeroapply) [![Reference Status](https://www.versioneye.com/java/com.github.xuwei-k:zeroapply-scalaz_2.11/reference_badge.svg?style=flat)](https://www.versioneye.com/java/com.github.xuwei-k:zeroapply-scalaz_2.11/references)
-
+# zeroapply [![Build Status](https://secure.travis-ci.org/xuwei-k/zeroapply.png)](http://travis-ci.org/xuwei-k/zeroapply)
 
 ## Zero Cost `Apply`/`Applicative` Syntax
 
