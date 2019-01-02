@@ -2,7 +2,7 @@ language: scala
 
 scala:
 - 2.11.12
-- 2.12.7
+- 2.12.8
 - 2.13.0-M5
 
 sudo: false
@@ -28,7 +28,7 @@ before_cache:
 matrix:
   include:
   - jdk: openjdk11
-    scala: 2.12.7
+    scala: 2.12.8
 
 env:
   global:
