@@ -8,11 +8,7 @@ import sbtbuildinfo.BuildInfoKeys._
 object Common {
 
   def gitHash: String =
-    scala.util
-      .Try(
-        sys.process.Process("git rev-parse HEAD").lineStream_!.head
-      )
-      .getOrElse("master")
+    sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
   val generateBoilerplate = TaskKey[Unit]("generateBoilerplate")
   val generateSources = SettingKey[List[Boilerplate.SourceCode]]("generateSources")
