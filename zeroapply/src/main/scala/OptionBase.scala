@@ -1,6 +1,6 @@
 package zeroapply
 
-abstract class OptionBase extends InlineUtil with OptionBoilerplate{
+abstract class OptionBase extends InlineUtil with OptionBoilerplate {
   import c.universe._
 
   override final def tupleN(params: List[Tree], types: List[Type]): Tree =
@@ -22,31 +22,31 @@ abstract class OptionBase extends InlineUtil with OptionBoilerplate{
         p -> TermName(c.freshName("x" + index))
     }
 
-    val valList = (valNamesAndParams, types).zipped.map{
+    val valList = (valNamesAndParams, types).zipped.map {
       case ((p, name), t) =>
         getValDef(name, t, p)
     }
 
     val valNames = valNamesAndParams.map(_._2)
 
-    val block = if(isTuple){
+    val block = if (isTuple) {
       f match {
         case Function(fparams, body) =>
-          val newParams = (fparams, valNames, types).zipped.map{ (p, name, t) =>
+          val newParams = (fparams, valNames, types).zipped.map { (p, name, t) =>
             val b = Ident(name)
             ValDef(p.mods, p.name, TypeTree(p.tpe), getValue(b, t))
           }
           Block(newParams, q"$body")
         case other => other
       }
-    }else{
-      val list = (valNames, types).zipped.map{
-        (v, t) => getValue(q"$v", t)
+    } else {
+      val list = (valNames, types).zipped.map { (v, t) =>
+        getValue(q"$v", t)
       }
       inlineAndReset(q"$f(..$list)")
     }
 
-    val tree = valList.foldRight(wrapSome(block)){
+    val tree = valList.foldRight(wrapSome(block)) {
       case (valdef @ ValDef(_, name, _, _), ifNonEmpty) =>
         val ident = Ident(name)
         q"""

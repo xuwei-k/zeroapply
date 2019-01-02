@@ -2,7 +2,7 @@ package zeroapply
 
 import scala.reflect.macros.blackbox.Context
 
-final class LazyOptionImpl (override val c: Context) extends OptionBase {
+final class LazyOptionImpl(override val c: Context) extends OptionBase {
   import c.universe._
 
   override protected def getValDef(name: TermName, tpe: Type, body: Tree): Tree =

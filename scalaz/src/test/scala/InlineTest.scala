@@ -32,15 +32,14 @@ final class InlineTest {
     val maybe = MaybeApply.apply2(Maybe.just(1), Maybe.just("a"))((a, b) => getStackTrace).getOrElse(null)
     val validationNel = ValidationNelApply.apply2(1.successNel[Int], "a".successNel[Int])((a, b) => getStackTrace).getOrElse(null)
 
-    (
-      option ::
-      either ::
-      utilTry ::
-      disjunction ::
-      maybe ::
-      validationNel ::
-      Nil
-    ).foreach{ stackTrace =>
+    List(
+      option,
+      either,
+      utilTry,
+      disjunction,
+      maybe,
+      validationNel
+    ).foreach { stackTrace =>
       check(stackTrace.take(10).mkString("\n"), stackTrace, 1, "test1")
     }
   }

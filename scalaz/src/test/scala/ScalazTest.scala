@@ -9,7 +9,7 @@ final class ScalazTest {
 
   private def err: Nothing = sys.error("undefined")
 
-  implicit class AssertOps[A](private val a1: A){
+  implicit class AssertOps[A](private val a1: A) {
     def mustEqual(a2: A) = assertEquals(a1, a2)
   }
 
@@ -32,8 +32,8 @@ final class ScalazTest {
   def lazyEither(): Unit = {
     import _root_.scalaz.syntax.equal._
     import _root_.scalaz.std.AllInstances._
-    import _root_.scalaz.{Equal, Show, LazyEither}
-    import LazyEither.{lazyRight, lazyLeft}
+    import _root_.scalaz.{Equal, LazyEither, Show}
+    import LazyEither.{lazyLeft, lazyRight}
     implicit def equal[A: Equal, B: Equal]: Equal[LazyEither[A, B]] =
       Equal[Either[A, B]].contramap(_.toEither)
     implicit def show[A, B]: Show[LazyEither[A, B]] = Show.showA
@@ -45,8 +45,6 @@ final class ScalazTest {
     LazyEitherApply.apply3[Int, Int, Int, Int, String](lazyLeft(1), err, err)((_, _, _) => "") assert_=== lazyLeft(1)
     LazyEitherApply.tuple3[Int, Int, Int, String](lazyLeft("a"), err, err) assert_=== lazyLeft("a")
   }
-
-
   @Test
   def maybe(): Unit = {
     import _root_.scalaz.Maybe
@@ -82,7 +80,7 @@ final class ScalazTest {
   @Test
   def caseClassEqualOrder(): Unit = {
     import _root_.scalaz.std.AllInstances._
-    import _root_.scalaz.{Order, Equal}
+    import _root_.scalaz.{Equal, Order}
 
     val f = Foo(true, Option("a"), 42)
     assert(Order[Foo[Boolean, Option[String]]].lessThan(f, f.copy(c = 100)))

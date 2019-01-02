@@ -10,9 +10,9 @@ object build {
   final val zeroapplyName = "zeroapply"
   final val zeroapplyScalazName = "zeroapply-scalaz"
 
-  val modules: List[String] =
-    zeroapplyName ::
-    zeroapplyScalazName ::
-    Nil
+  val modules: List[String] = List(
+    zeroapplyName,
+    zeroapplyScalazName,
+  )
 
 }

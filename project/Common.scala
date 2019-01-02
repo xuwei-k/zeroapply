@@ -7,23 +7,25 @@ import sbtbuildinfo.BuildInfoKeys._
 
 object Common {
 
-  def gitHash: String = scala.util.Try(
-    sys.process.Process("git rev-parse HEAD").lineStream_!.head
-  ).getOrElse("master")
+  def gitHash: String =
+    scala.util
+      .Try(
+        sys.process.Process("git rev-parse HEAD").lineStream_!.head
+      )
+      .getOrElse("master")
 
   val generateBoilerplate = TaskKey[Unit]("generateBoilerplate")
   val generateSources = SettingKey[List[Boilerplate.SourceCode]]("generateSources")
   val checkGenerate = TaskKey[Unit]("checkGenerate")
 
-  private[this] val unusedWarnings = (
-    "-Ywarn-unused" ::
-    Nil
+  private[this] val unusedWarnings = Seq(
+    "-Ywarn-unused",
   )
 
   private[this] val Scala211 = "2.11.12"
 
   val baseSettings = Seq(
-    fullResolvers ~= {_.filterNot(_.name == "jcenter")},
+    fullResolvers ~= { _.filterNot(_.name == "jcenter") },
     publishTo := Some(
       if (isSnapshot.value)
         Opts.resolver.sonatypeSnapshots
@@ -42,7 +44,7 @@ object Common {
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
     commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
     releaseProcess := Seq[ReleaseStep](
-      ReleaseStep{ state =>
+      ReleaseStep { state =>
         assert((Sxr.enableSxr in LocalRootProject).value)
         state
       },
@@ -67,32 +69,42 @@ object Common {
       UpdateReadme.updateReadmeProcess,
       pushChanges
     ),
-    credentials ++= PartialFunction.condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")){
-      case (Some(user), Some(pass)) =>
-        Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
-    }.toList,
+    credentials ++= PartialFunction
+      .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
+        case (Some(user), Some(pass)) =>
+          Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
+      }
+      .toList,
     organization := "com.github.xuwei-k",
     homepage := Some(url("https://github.com/xuwei-k/zeroapply")),
     licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/mit-license.php")),
-    scalacOptions ++= (
-      "-deprecation" ::
-      "-unchecked" ::
-      "-Xlint" ::
-      "-language:existentials" ::
-      "-language:higherKinds" ::
-      "-language:implicitConversions" ::
-      Nil
-    ) ::: unusedWarnings,
-    scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-      case Some((2, v)) if v <= 12 => "-Yno-adapted-args"
-    }.toList,
+    scalacOptions ++= Seq(
+      "-deprecation",
+      "-unchecked",
+      "-Xlint",
+      "-language:existentials",
+      "-language:higherKinds",
+      "-language:implicitConversions",
+    ),
+    scalacOptions ++= unusedWarnings,
+    scalacOptions ++= PartialFunction
+      .condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+        case Some((2, v)) if v <= 12 => "-Yno-adapted-args"
+      }
+      .toList,
     scalaVersion := Scala211,
     crossScalaVersions := Scala211 :: "2.12.8" :: "2.13.0-M5" :: Nil,
     scalacOptions in (Compile, doc) ++= {
-      val tag = if(isSnapshot.value) gitHash else { "v" + version.value }
+      val tag =
+        if (isSnapshot.value) gitHash
+        else {
+          "v" + version.value
+        }
       Seq(
-        "-sourcepath", (baseDirectory in LocalRootProject).value.getAbsolutePath,
-        "-doc-source-url", s"https://github.com/xuwei-k/zeroapply/tree/${tag}€{FILE_PATH}.scala"
+        "-sourcepath",
+        (baseDirectory in LocalRootProject).value.getAbsolutePath,
+        "-doc-source-url",
+        s"https://github.com/xuwei-k/zeroapply/tree/${tag}€{FILE_PATH}.scala"
       )
     },
     logBuffered in Test := false,
@@ -107,7 +119,12 @@ object Common {
       <scm>
         <url>git@github.com:xuwei-k/zeroapply.git</url>
         <connection>scm:git:git@github.com:xuwei-k/zeroapply.git</connection>
-        <tag>{if(isSnapshot.value) gitHash else { "v" + version.value }}</tag>
+        <tag>{
+        if (isSnapshot.value) gitHash
+        else {
+          "v" + version.value
+        }
+      }</tag>
       </scm>
     ),
     fork in Test := true,
@@ -119,7 +136,7 @@ object Common {
     },
     generateBoilerplate := {
       val dir = (scalaSource in Compile).value
-      generateSources.value.foreach{ source =>
+      generateSources.value.foreach { source =>
         IO.write(dir / (source.name + ".scala"), source.code)
       }
     },
@@ -130,11 +147,11 @@ object Common {
         override def transform(n: Node) =
           if (f(n)) NodeSeq.Empty else n
       }
-      val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
+      val stripTestScope = stripIf { n =>
+        n.label == "dependency" && (n \ "scope").text == "test"
+      }
       new RuleTransformer(stripTestScope).transform(node)(0)
     }
-  ) ++ Seq(Compile, Test).flatMap(c =>
-    scalacOptions in (c, console) ~= {_.filterNot(unusedWarnings.toSet)}
-  )
+  ) ++ Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) ~= { _.filterNot(unusedWarnings.toSet) })
 
 }

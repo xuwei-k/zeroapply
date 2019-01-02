@@ -2,7 +2,7 @@ object Boilerplate {
 
   final case class SourceCode(name: String, code: String)
 
-  private final class Gen(i: Int){
+  private final class Gen(i: Int) {
     val t = (1 to i).map("A" + _)
     val a = (1 to i).map("a" + _)
     val ts = t.mkString(", ")
@@ -44,7 +44,7 @@ ${(2 to n).map(gen).mkString("\n")}
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
-        s"""
+      s"""
   final def apply[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
     macro Impl.apply$i[$ts, Z]
 
@@ -78,7 +78,7 @@ ${(2 to n).map(gen).mkString("\n")}
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
-        s"""
+      s"""
   final def apply$i[$tparams, L: W, Z: W]($params0)(f: Tree): Tree =
     impl($params1, $params2, w[L], TypeTree(w[Z]), f)
 
@@ -105,7 +105,7 @@ ${(2 to n).map(gen).mkString("\n")}
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
-        s"""
+      s"""
   final def apply[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
     macro Impl.apply$i[$ts, L, Z]
 
@@ -134,22 +134,20 @@ ${(2 to n).map(gen).mkString("\n")}
     SourceCode(objectName, code)
   }
 
-  def scalaz(n: Int): List[SourceCode] = {
-    option("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n) ::
-    option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n) ::
-    either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n) ::
-    either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n) ::
-    either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n) ::
-    Nil
-  }
+  def scalaz(n: Int): List[SourceCode] = List(
+    option("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n),
+    option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n),
+    either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
+    either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
+    either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
+  )
 
-  def zeroapply(n: Int): List[SourceCode] = {
-    SourceCode("OptionBoilerplate", optionBoilerplate(n)) ::
-    SourceCode("EitherBoilerplate", eitherBoilerplate(n)) ::
-    option("OptionApply", "scala.{Option", "OptionImpl", n) ::
-    option("TryApply", "scala.util.{Try", "TryImpl", n) ::
-    either("EitherApply", "scala.{Either", "EitherImpl", n) ::
-    Nil
-  }
+  def zeroapply(n: Int): List[SourceCode] = List(
+    SourceCode("OptionBoilerplate", optionBoilerplate(n)),
+    SourceCode("EitherBoilerplate", eitherBoilerplate(n)),
+    option("OptionApply", "scala.{Option", "OptionImpl", n),
+    option("TryApply", "scala.util.{Try", "TryImpl", n),
+    either("EitherApply", "scala.{Either", "EitherImpl", n),
+  )
 
 }

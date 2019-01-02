@@ -1,9 +1,9 @@
 package zeroapply
 
-import scalaz.{Order, Equal}
+import scalaz.{Equal, Order}
 import scala.language.experimental.macros
 
-object CaseClass{
+object CaseClass {
   def equal[Z]: Equal[Z] =
     macro CaseClassImpl.equalImpl[Z]
 

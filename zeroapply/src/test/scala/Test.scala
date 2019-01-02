@@ -7,16 +7,16 @@ final class ZeroApplyTest {
 
   private def err: Nothing = sys.error("undefined")
 
-  implicit class AssertOps[A](private val a1: A){
+  implicit class AssertOps[A](private val a1: A) {
     def mustEqual(a2: A) = assertEquals(a1, a2)
   }
 
   @Test
   def utilTry(): Unit = {
-    import scala.util.{Success, Try, Failure}
+    import scala.util.{Failure, Success, Try}
     TryApply.tuple2(Try(1), Try(2)) mustEqual Try((1, 2))
     TryApply.apply2(Success(1), Success(2))(_ + _) mustEqual Try(3)
-    val e = new Throwable{}
+    val e = new Throwable {}
     TryApply.apply2(Success(1), throw e)(_ + _) mustEqual Failure(e)
     TryApply.apply2(Success(1), Failure(e))(_ + _) mustEqual Failure(e)
     TryApply.apply2(Success(1), Success(2))((_, _) => (throw e): Int) mustEqual Try(throw e)

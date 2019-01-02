@@ -23,7 +23,7 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
         p -> TermName(c.freshName("x" + index))
     }
 
-    val valList = (valNamesAndParams, types).zipped.map{
+    val valList = (valNamesAndParams, types).zipped.map {
       case ((p, name), t) =>
         getValDef(name, left, t, p)
     }
@@ -31,19 +31,20 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
     val valNames = valNamesAndParams.map(_._2)
     val failure = TermName(c.freshName("failure"))
 
-    val ifSuccess = if(isTuple){
+    val ifSuccess = if (isTuple) {
       f match {
         case Function(fparams, body) =>
-          val newParams = (fparams, valNames, types).zipped.map { case (p, name, r) =>
-            val b = q"${Ident(name)}"
-            ValDef(p.mods, p.name, TypeTree(p.tpe), rightValue(b, left, r))
+          val newParams = (fparams, valNames, types).zipped.map {
+            case (p, name, r) =>
+              val b = q"${Ident(name)}"
+              ValDef(p.mods, p.name, TypeTree(p.tpe), rightValue(b, left, r))
           }
           Block(newParams, q"$body")
         case other => other
       }
-    }else{
-      val list = (valNames, types).zipped.map{
-        (name, tpe) => rightValue(q"$name", left, tpe)
+    } else {
+      val list = (valNames, types).zipped.map { (name, tpe) =>
+        rightValue(q"$name", left, tpe)
       }
       inlineAndReset(q"$f(..$list)")
     }
@@ -53,7 +54,8 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
 
       var $failure : _root_.scalaz.IList[$left] = _root_.scalaz.IList.empty[$left]
 
-      ..${valNames.reverse.map{ case name =>
+      ..${valNames.reverse.map {
+      case name =>
         q"""
           if($name.isInstanceOf[_root_.scalaz.Failure[_]]){
             val nel = $name.asInstanceOf[_root_.scalaz.Failure[_root_.scalaz.NonEmptyList[$left]]].e
@@ -61,7 +63,7 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
             $failure ::= nel.head
           }
         """
-      }}
+    }}
 
       $failure match {
         case _root_.scalaz.INil() =>

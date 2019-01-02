@@ -1,11 +1,10 @@
-scalacOptions ++= (
-  "-deprecation" ::
-  "-unchecked" ::
-  "-language:existentials" ::
-  "-language:higherKinds" ::
-  "-language:implicitConversions" ::
-  "-Yno-adapted-args" ::
-  Nil
+scalacOptions ++= Seq(
+  "-deprecation",
+  "-unchecked",
+  "-language:existentials",
+  "-language:higherKinds",
+  "-language:implicitConversions",
+  "-Yno-adapted-args",
 )
 
 addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.2.6")
@@ -20,4 +19,6 @@ addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.2")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
 
-fullResolvers ~= {_.filterNot(_.name == "jcenter")}
+addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC4")
+
+fullResolvers ~= { _.filterNot(_.name == "jcenter") }
