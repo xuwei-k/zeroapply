@@ -2,6 +2,7 @@ package zeroapply
 
 import scalaprops._
 import scalaprops.Property.forAll
+import scalaprops.ScalapropsScalaz._
 import scalaz.{\/, Apply, Equal, IList, LazyEither, LazyOption, Maybe}
 import scalaz.std.list._
 import scalaz.std.anyVal._
