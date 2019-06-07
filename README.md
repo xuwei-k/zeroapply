@@ -77,15 +77,15 @@ new Order[Foo[A, B]] {
 ### latest stable version
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.2.2"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.2.3"
 ```
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.2.2"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.2.3"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.2.2/zeroapply-all_2.11-0.2.2-javadoc.jar/!/index.html)
-- [sxr](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.2.2/zeroapply-all_2.11-0.2.2-sxr.jar/!/index.html)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.2.3/zeroapply-all_2.11-0.2.3-javadoc.jar/!/index.html)
+- [sxr](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.2.3/zeroapply-all_2.11-0.2.3-sxr.jar/!/index.html)
 
 
 ### snapshot version
