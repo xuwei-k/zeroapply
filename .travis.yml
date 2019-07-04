@@ -8,7 +8,7 @@ scala:
 sudo: false
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 cache:
   directories:
