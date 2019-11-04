@@ -4,7 +4,6 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseStep
 import scala.sys.process.Process
 
 object UpdateReadme {
-
   private val sonatypeURL = "https://oss.sonatype.org/service/local/repositories/"
 
   val updateReadmeTask = { state: State =>

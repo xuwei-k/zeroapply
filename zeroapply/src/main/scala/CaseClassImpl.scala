@@ -3,7 +3,6 @@ package zeroapply
 import scala.reflect.macros.blackbox
 
 class CaseClassImpl(val c: blackbox.Context) {
-
   import c.universe._
 
   def equalImpl[Z: c.WeakTypeTag]: c.Tree = {

@@ -1,7 +1,6 @@
 import sbt._
 
 object build {
-
   final val boilerplateMax = 22
   val scalazVersion = SettingKey[String]("scalazVersion")
 
@@ -14,5 +13,4 @@ object build {
     zeroapplyName,
     zeroapplyScalazName,
   )
-
 }

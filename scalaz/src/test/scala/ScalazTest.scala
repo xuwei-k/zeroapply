@@ -6,7 +6,6 @@ import org.junit.Test
 import scalaz.{-\/, \/-}
 
 final class ScalazTest {
-
   private def err: Nothing = sys.error("undefined")
 
   implicit class AssertOps[A](private val a1: A) {
