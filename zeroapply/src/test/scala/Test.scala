@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 final class ZeroApplyTest {
-
   private def err: Nothing = sys.error("undefined")
 
   implicit class AssertOps[A](private val a1: A) {

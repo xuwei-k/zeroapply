@@ -7,7 +7,6 @@ import scalaz._
 import scalaz.syntax.validation._
 
 final class InlineTest {
-
   private[this] val expectClassName = getClass().getName
 
   private[this] def check(message: String, stackTrace: Array[StackTraceElement], index: Int, method: String) = {
@@ -43,5 +42,4 @@ final class InlineTest {
       check(stackTrace.take(10).mkString("\n"), stackTrace, 1, "test1")
     }
   }
-
 }

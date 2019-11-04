@@ -1,5 +1,4 @@
 object Boilerplate {
-
   final case class SourceCode(name: String, code: String)
 
   private final class Gen(i: Int) {
@@ -149,5 +148,4 @@ ${(2 to n).map(gen).mkString("\n")}
     option("TryApply", "scala.util.{Try", "TryImpl", n),
     either("EitherApply", "scala.{Either", "EitherImpl", n),
   )
-
 }

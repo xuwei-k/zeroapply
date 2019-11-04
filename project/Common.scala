@@ -6,7 +6,6 @@ import com.typesafe.sbt.pgp.PgpKeys
 import sbtbuildinfo.BuildInfoKeys._
 
 object Common {
-
   def gitHash: String =
     sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
@@ -149,5 +148,4 @@ object Common {
       new RuleTransformer(stripTestScope).transform(node)(0)
     }
   ) ++ Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) ~= { _.filterNot(unusedWarnings.toSet) })
-
 }
