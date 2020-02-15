@@ -38,8 +38,6 @@ final class InlineTest {
       disjunction,
       maybe,
       validationNel
-    ).foreach { stackTrace =>
-      check(stackTrace.take(10).mkString("\n"), stackTrace, 1, "test1")
-    }
+    ).foreach { stackTrace => check(stackTrace.take(10).mkString("\n"), stackTrace, 1, "test1") }
   }
 }

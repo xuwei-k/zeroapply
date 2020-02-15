@@ -42,9 +42,7 @@ abstract class EitherBase extends InlineUtil with Common with EitherBoilerplate 
         case other => other
       }
     } else {
-      val list = (valNames, types).zipped.map { (v, t) =>
-        rightValue(q"$v", left, t)
-      }
+      val list = (valNames, types).zipped.map { (v, t) => rightValue(q"$v", left, t) }
       inlineAndReset(q"$f(..$list)")
     }
 

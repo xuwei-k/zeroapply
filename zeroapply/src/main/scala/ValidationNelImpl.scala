@@ -43,9 +43,7 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
         case other => other
       }
     } else {
-      val list = (valNames, types).zipped.map { (name, tpe) =>
-        rightValue(q"$name", left, tpe)
-      }
+      val list = (valNames, types).zipped.map { (name, tpe) => rightValue(q"$name", left, tpe) }
       inlineAndReset(q"$f(..$list)")
     }
 
