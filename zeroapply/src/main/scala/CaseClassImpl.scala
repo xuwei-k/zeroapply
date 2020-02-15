@@ -8,9 +8,7 @@ class CaseClassImpl(val c: blackbox.Context) {
   def equalImpl[Z: c.WeakTypeTag]: c.Tree = {
     val Z = weakTypeOf[Z]
     val x1, x2 = TermName(c.freshName("x"))
-    val fields = Z.decls.filter { m =>
-      m.isTerm && m.asTerm.isCaseAccessor && m.isMethod
-    }
+    val fields = Z.decls.filter { m => m.isTerm && m.asTerm.isCaseAccessor && m.isMethod }
 
     q"""new _root_.scalaz.Equal[$Z]{
       ${isNatural(fields, Z)}
@@ -27,18 +25,16 @@ class CaseClassImpl(val c: blackbox.Context) {
   }
 
   private def isNatural(fields: Iterable[c.Symbol], Z: c.Type) = {
-    val body = fields.map { m =>
-      q"_root_.scalaz.Equal[${m.typeSignatureIn(Z)}].equalIsNatural"
-    }.reduceLeft[c.universe.Tree]((t1, t2) => q"$t1 && $t2")
+    val body = fields.map { m => q"_root_.scalaz.Equal[${m.typeSignatureIn(Z)}].equalIsNatural" }.reduceLeft[c.universe.Tree]((t1, t2) =>
+      q"$t1 && $t2"
+    )
     q"override def equalIsNatural = $body"
   }
 
   def orderImpl[Z: c.WeakTypeTag]: c.Tree = {
     val Z = weakTypeOf[Z]
     val x1, x2 = TermName(c.freshName("x"))
-    val fields = Z.decls.filter { m =>
-      m.isTerm && m.asTerm.isCaseAccessor && m.isMethod
-    }
+    val fields = Z.decls.filter { m => m.isTerm && m.asTerm.isCaseAccessor && m.isMethod }
 
     val last: Tree = {
       val m = fields.last

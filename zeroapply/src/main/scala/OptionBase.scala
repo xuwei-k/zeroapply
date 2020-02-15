@@ -40,9 +40,7 @@ abstract class OptionBase extends InlineUtil with OptionBoilerplate {
         case other => other
       }
     } else {
-      val list = (valNames, types).zipped.map { (v, t) =>
-        getValue(q"$v", t)
-      }
+      val list = (valNames, types).zipped.map { (v, t) => getValue(q"$v", t) }
       inlineAndReset(q"$f(..$list)")
     }
 
