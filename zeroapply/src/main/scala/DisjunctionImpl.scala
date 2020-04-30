@@ -12,7 +12,7 @@ final class DisjunctionImpl(override val c: Context) extends EitherBase {
     q"""_root_.scalaz.\/-($value)"""
 
   override protected def rightValue(value: Tree, left: Type, right: Type) =
-    q"""$value.asInstanceOf[_root_.scalaz.\/-[$right]].b"""
+    q"""$value.asInstanceOf[_root_.scalaz.\/-[_root_.scala.Any, $right]].b"""
 
   override protected def asEither(value: Tree, left: Type, right: Tree) =
     q"""$value.asInstanceOf[_root_.scalaz.\/[$left, $right]]"""

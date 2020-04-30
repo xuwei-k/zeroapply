@@ -9,7 +9,7 @@ final class MaybeImpl(override val c: Context) extends OptionBase {
     q"val $name: _root_.scalaz.Maybe[$tpe] = $body"
 
   override protected def getValue(value: Tree, tpe: Type): Tree =
-    q"$value.asInstanceOf[_root_.scalaz.Maybe.Just[$tpe]].a"
+    q"$value.asInstanceOf[_root_.scalaz.Maybe.Just[$tpe]].get"
 
   override protected def none(value: Tree): Tree =
     q"_root_.scalaz.Maybe.Empty()"

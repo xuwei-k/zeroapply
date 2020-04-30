@@ -27,7 +27,7 @@ final class InlineTest {
     val option = OptionApply.apply2(Option(1), Option("a"))((a, b) => getStackTrace).get
     val either = EitherApply.apply2(Right(1), Right("a"))((a, b) => getStackTrace).right.get
     val utilTry = TryApply.apply2(Try(1), Try("a"))((a, b) => getStackTrace).get
-    val disjunction = DisjunctionApply.apply2(\/-(1), \/-("a"))((a, b) => getStackTrace).getOrElse(null)
+    val disjunction = DisjunctionApply.apply2(\/-[Int, Int](1), \/-[Int, String]("a"))((a, b) => getStackTrace).getOrElse(null)
     val maybe = MaybeApply.apply2(Maybe.just(1), Maybe.just("a"))((a, b) => getStackTrace).getOrElse(null)
     val validationNel = ValidationNelApply.apply2(1.successNel[Int], "a".successNel[Int])((a, b) => getStackTrace).getOrElse(null)
 

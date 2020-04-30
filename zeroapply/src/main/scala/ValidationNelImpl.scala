@@ -9,7 +9,7 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
     q"val $name: _root_.scalaz.ValidationNel[$left, $right] = $body"
 
   protected def rightValue(value: Tree, left: Type, right: Type): Tree =
-    q"$value.asInstanceOf[scalaz.Success[$right]].a"
+    q"$value.asInstanceOf[scalaz.Success[$left, $right]].a"
 
   protected def wrapRight(value: Tree): Tree =
     q"_root_.scalaz.Success($value)"
@@ -55,8 +55,8 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
       ..${valNames.reverse.map {
       case name =>
         q"""
-          if($name.isInstanceOf[_root_.scalaz.Failure[_]]){
-            val nel = $name.asInstanceOf[_root_.scalaz.Failure[_root_.scalaz.NonEmptyList[$left]]].e
+          if($name.isInstanceOf[_root_.scalaz.Failure[_, _]]){
+            val nel = $name.asInstanceOf[_root_.scalaz.Failure[_root_.scalaz.NonEmptyList[$left], _]].e
             $failure :::= nel.tail
             $failure ::= nel.head
           }

@@ -50,7 +50,7 @@ object ZeroapplyScalapropsTest extends Scalaprops {
 
   val lazyEither = forAll { (a1: LazyEitherInt[Int], a2: LazyEitherInt[String], a3: LazyEitherInt[IList[Byte]]) =>
     implicit def lazyEitherEq[A: Equal, B: Equal]: Equal[LazyEither[A, B]] =
-      Equal.equalBy(_.disjunction)
+      Equal.equalBy(_.toDisjunction)
 
     LazyEitherApply.tuple3(a1, a2, a3) mustEqual Apply[LazyEitherInt].tuple3(a1, a2, a3)
     LazyEitherApply.apply3(a1, a2, a3)(Tuple3.apply) mustEqual Apply[LazyEitherInt].apply3(a1, a2, a3)(Tuple3.apply)
