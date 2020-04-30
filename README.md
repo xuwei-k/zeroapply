@@ -93,17 +93,17 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.4.0"
 ```scala
 resolvers += Opts.resolver.sonatypeSnapshots
 
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.2.4-SNAPSHOT"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.4.1-SNAPSHOT"
 ```
 
 ```scala
 resolvers += Opts.resolver.sonatypeSnapshots
 
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.2.4-SNAPSHOT"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.4.1-SNAPSHOT"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.2.4-SNAPSHOT/zeroapply-all_2.11-0.2.4-SNAPSHOT-javadoc.jar/!/index.html)
-- [sxr](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.2.4-SNAPSHOT/zeroapply-all_2.11-0.2.4-SNAPSHOT-sxr.jar/!/index.html)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.4.1-SNAPSHOT/zeroapply-all_2.11-0.4.1-SNAPSHOT-javadoc.jar/!/index.html)
+- [sxr](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/zeroapply-all_2.11/0.4.1-SNAPSHOT/zeroapply-all_2.11-0.4.1-SNAPSHOT-sxr.jar/!/index.html)
 
 ### for scalaz 7.1.x
 
