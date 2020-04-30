@@ -4,6 +4,7 @@ import sbtrelease.ReleasePlugin.autoImport._
 import ReleaseStateTransformations._
 import com.jsuereth.sbtpgp.PgpKeys
 import sbtbuildinfo.BuildInfoKeys._
+import xerial.sbt.Sonatype.autoImport.sonatypePublishToBundle
 
 object Common {
   def gitHash: String =
@@ -21,12 +22,7 @@ object Common {
 
   val baseSettings = Seq(
     fullResolvers ~= { _.filterNot(_.name == "jcenter") },
-    publishTo := Some(
-      if (isSnapshot.value)
-        Opts.resolver.sonatypeSnapshots
-      else
-        Opts.resolver.sonatypeStaging
-    ),
+    publishTo := sonatypePublishToBundle.value,
     buildInfoKeys := Seq(
       organization,
       name,
@@ -58,9 +54,9 @@ object Common {
         },
         enableCrossBuild = true
       ),
+      releaseStepCommandAndRemaining("sonatypeBundleRelease"),
       setNextVersion,
       commitNextVersion,
-      releaseStepCommand("sonatypeReleaseAll"),
       UpdateReadme.updateReadmeProcess,
       pushChanges
     ),
