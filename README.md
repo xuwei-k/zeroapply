@@ -1,4 +1,4 @@
-# zeroapply [![Build Status](https://secure.travis-ci.org/xuwei-k/zeroapply.png)](http://travis-ci.org/xuwei-k/zeroapply)
+# zeroapply [![Build Status](https://travis-ci.com/xuwei-k/zeroapply.svg?branch=master)](https://travis-ci.com/github/xuwei-k/zeroapply)
 
 ## Zero Cost `Apply`/`Applicative` Syntax
 
