@@ -88,6 +88,6 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.4.0"
 - [sxr](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.4.0/zeroapply-all_2.11-0.4.0-sxr.jar/!/index.html)
 
 
-### for scalaz 7.1.x
+### for scalaz 7.2.x
 
-<https://github.com/xuwei-k/zeroapply/tree/0.1.x>
+<https://github.com/xuwei-k/zeroapply/tree/0.2.x>
