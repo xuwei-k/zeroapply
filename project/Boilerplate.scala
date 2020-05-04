@@ -133,19 +133,21 @@ ${(2 to n).map(gen).mkString("\n")}
     SourceCode(objectName, code)
   }
 
-  def scalaz(n: Int): List[SourceCode] = List(
-    option("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n),
-    option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n),
-    either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
-    either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
-    either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
-  )
+  def scalaz(n: Int): List[SourceCode] =
+    List(
+      option("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n),
+      option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n),
+      either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
+      either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
+      either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
+    )
 
-  def zeroapply(n: Int): List[SourceCode] = List(
-    SourceCode("OptionBoilerplate", optionBoilerplate(n)),
-    SourceCode("EitherBoilerplate", eitherBoilerplate(n)),
-    option("OptionApply", "scala.{Option", "OptionImpl", n),
-    option("TryApply", "scala.util.{Try", "TryImpl", n),
-    either("EitherApply", "scala.{Either", "EitherImpl", n),
-  )
+  def zeroapply(n: Int): List[SourceCode] =
+    List(
+      SourceCode("OptionBoilerplate", optionBoilerplate(n)),
+      SourceCode("EitherBoilerplate", eitherBoilerplate(n)),
+      option("OptionApply", "scala.{Option", "OptionImpl", n),
+      option("TryApply", "scala.util.{Try", "TryImpl", n),
+      either("EitherApply", "scala.{Either", "EitherImpl", n),
+    )
 }
