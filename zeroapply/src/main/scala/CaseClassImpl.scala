@@ -25,9 +25,8 @@ class CaseClassImpl(val c: blackbox.Context) {
   }
 
   private def isNatural(fields: Iterable[c.Symbol], Z: c.Type) = {
-    val body = fields.map { m => q"_root_.scalaz.Equal[${m.typeSignatureIn(Z)}].equalIsNatural" }.reduceLeft[c.universe.Tree]((t1, t2) =>
-      q"$t1 && $t2"
-    )
+    val body =
+      fields.map { m => q"_root_.scalaz.Equal[${m.typeSignatureIn(Z)}].equalIsNatural" }.reduceLeft[c.universe.Tree]((t1, t2) => q"$t1 && $t2")
     q"override def equalIsNatural = $body"
   }
 
