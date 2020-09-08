@@ -41,11 +41,10 @@ class CaseClassImpl(val c: blackbox.Context) {
       q"$t.order(${Select(Ident(x1), m.name)}, ${Select(Ident(x2), m.name)})"
     }
 
-    val order = (fields.init, Stream.continually(TermName(c.freshName("x")))).zipped.foldRight(last) {
-      case ((m, other), acc) =>
-        val t = q"_root_.scalaz.Order[${m.typeSignatureIn(Z)}]"
+    val order = (fields.init, Stream.continually(TermName(c.freshName("x")))).zipped.foldRight(last) { case ((m, other), acc) =>
+      val t = q"_root_.scalaz.Order[${m.typeSignatureIn(Z)}]"
 
-        q"""
+      q"""
           $t.order(${Select(Ident(x1), m.name)}, ${Select(Ident(x2), m.name)}) match {
             case _root_.scalaz.Ordering.EQ => $acc
             case $other => $other

@@ -17,14 +17,12 @@ abstract class OptionBase extends InlineUtil with OptionBoilerplate {
   protected def isEmpty(value: Tree): Tree
 
   override final def impl(params: List[Tree], types: List[Type], f: Tree, result: Tree, isTuple: Boolean = false): Tree = {
-    val valNamesAndParams = params.zipWithIndex.map {
-      case (p, index) =>
-        p -> TermName(c.freshName("x" + index))
+    val valNamesAndParams = params.zipWithIndex.map { case (p, index) =>
+      p -> TermName(c.freshName("x" + index))
     }
 
-    val valList = (valNamesAndParams, types).zipped.map {
-      case ((p, name), t) =>
-        getValDef(name, t, p)
+    val valList = (valNamesAndParams, types).zipped.map { case ((p, name), t) =>
+      getValDef(name, t, p)
     }
 
     val valNames = valNamesAndParams.map(_._2)
@@ -44,10 +42,9 @@ abstract class OptionBase extends InlineUtil with OptionBoilerplate {
       inlineAndReset(q"$f(..$list)")
     }
 
-    val tree = valList.foldRight(wrapSome(block)) {
-      case (valdef @ ValDef(_, name, _, _), ifNonEmpty) =>
-        val ident = Ident(name)
-        q"""
+    val tree = valList.foldRight(wrapSome(block)) { case (valdef @ ValDef(_, name, _, _), ifNonEmpty) =>
+      val ident = Ident(name)
+      q"""
           $valdef
           if(${isEmpty(ident)}){
             ${none(ident)}

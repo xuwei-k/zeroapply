@@ -18,14 +18,12 @@ abstract class EitherBase extends InlineUtil with Common with EitherBoilerplate 
   }
 
   override def impl(params: List[Tree], types: List[Type], left: Type, right: Tree, f: Tree, isTuple: Boolean = false): Tree = {
-    val valNamesAndParams = params.zipWithIndex.map {
-      case (p, index) =>
-        p -> TermName(c.freshName("x" + index))
+    val valNamesAndParams = params.zipWithIndex.map { case (p, index) =>
+      p -> TermName(c.freshName("x" + index))
     }
 
-    val valList = (valNamesAndParams, types).zipped.map {
-      case ((p, name), t) =>
-        getValDef(name, left, t, p)
+    val valList = (valNamesAndParams, types).zipped.map { case ((p, name), t) =>
+      getValDef(name, left, t, p)
     }
 
     val valNames = valNamesAndParams.map(_._2)
@@ -33,10 +31,9 @@ abstract class EitherBase extends InlineUtil with Common with EitherBoilerplate 
     val block = if (isTuple) {
       f match {
         case Function(fparams, body) =>
-          val newParams = (fparams, valNames, types).zipped.map {
-            case (p, name, r) =>
-              val b = q"${Ident(name)}"
-              ValDef(p.mods, p.name, TypeTree(p.tpe), rightValue(b, left, r))
+          val newParams = (fparams, valNames, types).zipped.map { case (p, name, r) =>
+            val b = q"${Ident(name)}"
+            ValDef(p.mods, p.name, TypeTree(p.tpe), rightValue(b, left, r))
           }
           Block(newParams, q"$body")
         case other => other
@@ -46,10 +43,9 @@ abstract class EitherBase extends InlineUtil with Common with EitherBoilerplate 
       inlineAndReset(q"$f(..$list)")
     }
 
-    val tree = valList.foldRight(wrapRight(block)) {
-      case (valdef @ ValDef(_, name, _, _), ifRight) =>
-        val ident = Ident(name)
-        q"""
+    val tree = valList.foldRight(wrapRight(block)) { case (valdef @ ValDef(_, name, _, _), ifRight) =>
+      val ident = Ident(name)
+      q"""
           $valdef
           if($ident.isLeft){
             ${asEither(ident, left, right)}
