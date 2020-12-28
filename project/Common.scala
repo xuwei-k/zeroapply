@@ -71,12 +71,18 @@ object Common {
     scalacOptions ++= Seq(
       "-deprecation",
       "-unchecked",
-      "-Xlint",
       "-language:existentials",
       "-language:higherKinds",
       "-language:implicitConversions",
     ),
-    scalacOptions ++= unusedWarnings,
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) =>
+          Nil
+        case _ =>
+          Seq("-Xlint") ++ unusedWarnings
+      }
+    },
     scalacOptions ++= PartialFunction
       .condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
         case Some((2, v)) if v <= 12 => "-Yno-adapted-args"
@@ -125,8 +131,13 @@ object Common {
       assert(lines.isEmpty, lines.mkString("\n"))
     },
     generateBoilerplate := {
-      val dir = (scalaSource in Compile).value
-      generateSources.value.foreach { source => IO.write(dir / (source.name + ".scala"), source.code) }
+      val dir = (scalaSource in Compile).value.getParentFile
+      generateSources.value.foreach { source =>
+        IO.write(
+          dir / s"scala-${source.version}" / (source.name + ".scala"),
+          source.code
+        )
+      }
     },
     pomPostProcess := { node =>
       import scala.xml._

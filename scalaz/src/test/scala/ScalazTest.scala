@@ -67,26 +67,4 @@ final class ScalazTest {
     LazyOptionApply.apply3[Int, String, List[Int], Int](lazyNone, err, lazyNone)((a, b, c) => 9) assert_=== lazyNone[Int]
     LazyOptionApply.tuple3(lazySome(1), lazySome("a"), lazySome(List(8))) assert_=== lazySome((1, "a", List(8)))
   }
-
-  private case class Foo[A, B](a: A, b: B, c: Int)
-  private object Foo {
-    import _root_.scalaz.Order
-    import _root_.scalaz.std.anyVal._
-    implicit def instance[A: Order, B: Order]: Order[Foo[A, B]] =
-      CaseClass.order[Foo[A, B]]
-  }
-
-  @Test
-  def caseClassEqualOrder(): Unit = {
-    import _root_.scalaz.std.AllInstances._
-    import _root_.scalaz.{Equal, Order}
-
-    val f = Foo(true, Option("a"), 42)
-    assert(Order[Foo[Boolean, Option[String]]].lessThan(f, f.copy(c = 100)))
-    assert(Equal[Foo[Boolean, Option[String]]].equal(f, f.copy()))
-    assert(Order[Foo[Boolean, Option[String]]].equalIsNatural)
-
-    assert(CaseClass.equal[Foo[Boolean, Option[String]]].equal(f, f.copy()))
-    assert(CaseClass.equal[Foo[Boolean, Option[String]]].equalIsNatural)
-  }
 }

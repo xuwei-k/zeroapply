@@ -10,10 +10,21 @@ lazy val zeroapply = Project("zeroapply", file("zeroapply"))
     buildInfoPackage := "zeroapply",
     buildInfoObject := "BuildInfoZeroApply",
     Common.generateSources := Boilerplate.zeroapply(boilerplateMax),
-    libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      junit,
-    )
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, _)) =>
+          Seq(
+            "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+          )
+        case _ =>
+          Nil
+      }
+    },
+    libraryDependencies ++= {
+      Seq(
+        junit,
+      )
+    }
   )
 
 lazy val scalaz = Project("scalaz", file("scalaz"))
@@ -30,10 +41,10 @@ lazy val scalaz = Project("scalaz", file("scalaz"))
     ),
     Common.generateSources := Boilerplate.scalaz(boilerplateMax),
     scalazVersion := "7.3.2",
-    scalapropsWithScalaz,
-    scalapropsVersion := "0.8.1",
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core" % scalazVersion.value,
+      "org.scalaz" %% "scalaz-core" % scalazVersion.value withDottyCompat scalaVersion.value,
+      "com.github.scalaprops" %% "scalaprops" % "0.8.1" % "test" withDottyCompat scalaVersion.value,
+      "com.github.scalaprops" %% "scalaprops-scalaz" % "0.8.1" % "test" withDottyCompat scalaVersion.value,
       junit,
     )
   )

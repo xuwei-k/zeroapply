@@ -10,7 +10,7 @@ import scalaz.std.string._
 import scalaz.std.tuple._
 
 object ZeroapplyScalapropsTest extends Scalaprops {
-  private[this] implicit val stringGen = Gen.asciiString
+  private[this] implicit val stringGen: Gen[String] = Gen.asciiString
 
   private implicit class AssertOps[A](private val a1: A) extends AnyVal {
     def mustEqual(a2: A)(implicit A: Equal[A]): Boolean = {
@@ -61,12 +61,5 @@ object ZeroapplyScalapropsTest extends Scalaprops {
   val disjunction = forAll { (a1: DisjunctionInt[Int], a2: DisjunctionInt[String], a3: DisjunctionInt[List[Int]]) =>
     DisjunctionApply.tuple3(a1, a2, a3) mustEqual Apply[DisjunctionInt].tuple3(a1, a2, a3)
     DisjunctionApply.apply3(a1, a2, a3)(Tuple3.apply) mustEqual Apply[DisjunctionInt].apply3(a1, a2, a3)(Tuple3.apply)
-  }
-
-  type ValidationNenInt[A] = scalaz.ValidationNel[Int, A]
-
-  val validationNel = forAll { (a1: ValidationNenInt[Int], a2: ValidationNenInt[String], a3: ValidationNenInt[Maybe[Int]]) =>
-    ValidationNelApply.tuple3(a1, a2, a3) mustEqual Apply[ValidationNenInt].tuple3(a1, a2, a3)
-    ValidationNelApply.apply3(a1, a2, a3)(Tuple3.apply) mustEqual Apply[ValidationNenInt].apply3(a1, a2, a3)(Tuple3.apply)
   }
 }

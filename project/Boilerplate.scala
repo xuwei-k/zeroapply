@@ -1,5 +1,5 @@
 object Boilerplate {
-  final case class SourceCode(name: String, code: String)
+  final case class SourceCode(name: String, code: String, version: Int)
 
   private final class Gen(i: Int) {
     val t = (1 to i).map("A" + _)
@@ -39,7 +39,39 @@ ${(2 to n).map(gen).mkString("\n")}
 """
   }
 
-  private def option(objectName: String, classRename: String, impl: String, n: Int): SourceCode = {
+  // TODO use macro
+  private def optionScala3(objectName: String, classRename: String, n: Int): SourceCode = {
+    def gen(i: Int) = {
+      val g = new Gen(i)
+      import g._
+      s"""
+  final def apply[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
+    apply$i[$ts, Z](${a.mkString(", ")})(f)
+
+  final def apply$i[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
+    for { ${a.zipWithIndex.map { case (a, i) => s"x${i + 1} <- $a" }.mkString("; ")} } yield f(${(1 to i).map("x" + _).mkString(", ")})
+
+  final def tuple[$ts]($paramsF): F[($ts)] =
+    tuple$i[$ts](${a.mkString(", ")})
+
+  final def tuple$i[$ts]($paramsF): F[($ts)] =
+    apply$i(${a.mkString(", ")})(Tuple$i.apply)"""
+    }
+
+    val code = s"""package zeroapply
+
+object $objectName {
+
+  import $classRename => F}
+
+${(2 to n).map(gen).mkString("\n")}
+}
+"""
+
+    SourceCode(objectName, code, 3)
+  }
+
+  private def optionScala2(objectName: String, classRename: String, impl: String, n: Int): SourceCode = {
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
@@ -70,7 +102,7 @@ ${(2 to n).map(gen).mkString("\n")}
 }
 """
 
-    SourceCode(objectName, code)
+    SourceCode(objectName, code, 2)
   }
 
   private def eitherBoilerplate(n: Int): String = {
@@ -100,7 +132,37 @@ ${(2 to n).map(gen).mkString("\n")}
 """
   }
 
-  private def either(objectName: String, classRename: String, impl: String, n: Int): SourceCode = {
+  private def eitherScala3(objectName: String, classRename: String, n: Int): SourceCode = {
+    def gen(i: Int) = {
+      val g = new Gen(i)
+      import g._
+      s"""
+  final def apply[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
+    apply$i[$ts, L, Z](${a.mkString(", ")})(f)
+
+  final def apply$i[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
+    for { ${a.zipWithIndex.map { case (a, i) => s"x${i + 1} <- $a" }.mkString("; ")} } yield f(${(1 to i).map("x" + _).mkString(", ")})
+
+  final def tuple[$ts, L]($paramsFL): F[L, ($ts)]=
+    tuple$i(${a.mkString(", ")})
+
+  final def tuple$i[$ts, L]($paramsFL): F[L, ($ts)]=
+    apply$i(${a.mkString(", ")})(Tuple$i.apply)"""
+    }
+
+    val code = s"""package zeroapply
+
+object $objectName {
+
+  import $classRename => F}
+
+${(2 to n).map(gen).mkString("\n")}
+}
+"""
+    SourceCode(objectName, code, 3)
+  }
+
+  private def eitherScala2(objectName: String, classRename: String, impl: String, n: Int): SourceCode = {
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
@@ -130,24 +192,31 @@ object $objectName {
 ${(2 to n).map(gen).mkString("\n")}
 }
 """
-    SourceCode(objectName, code)
+    SourceCode(objectName, code, 2)
   }
 
   def scalaz(n: Int): List[SourceCode] =
     List(
-      option("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n),
-      option("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n),
-      either("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
-      either("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
-      either("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
+      optionScala2("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n),
+      optionScala2("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n),
+      optionScala3("MaybeApply", "scalaz.{Maybe", n),
+      optionScala3("LazyOptionApply", "scalaz.{LazyOption", n),
+      eitherScala2("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
+      eitherScala2("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
+      eitherScala2("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
+      eitherScala3("DisjunctionApply", """scalaz.{\/""", n),
+      eitherScala3("LazyEitherApply", """scalaz.{LazyEither""", n),
     )
 
   def zeroapply(n: Int): List[SourceCode] =
     List(
-      SourceCode("OptionBoilerplate", optionBoilerplate(n)),
-      SourceCode("EitherBoilerplate", eitherBoilerplate(n)),
-      option("OptionApply", "scala.{Option", "OptionImpl", n),
-      option("TryApply", "scala.util.{Try", "TryImpl", n),
-      either("EitherApply", "scala.{Either", "EitherImpl", n),
+      SourceCode("OptionBoilerplate", optionBoilerplate(n), 2),
+      SourceCode("EitherBoilerplate", eitherBoilerplate(n), 2),
+      optionScala3("OptionApply", "scala.{Option", n),
+      optionScala3("TryApply", "scala.util.{Try", n),
+      eitherScala3("EitherApply", "scala.{Either", n),
+      optionScala2("OptionApply", "scala.{Option", "OptionImpl", n),
+      optionScala2("TryApply", "scala.util.{Try", "TryImpl", n),
+      eitherScala2("EitherApply", "scala.{Either", "EitherImpl", n),
     )
 }
