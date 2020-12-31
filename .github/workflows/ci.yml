@@ -17,5 +17,5 @@ jobs:
     - run: git show --oneline --check
     - run: sbt -v scalafmtSbtCheck scalafmtCheckAll
     - run: sbt -v checkGenerate "+test" "+publishLocal"
-    - run: sbt -v '++ 3.0.0-M3!' "Test/compile"
+    - run: sbt -v '++ 3.0.0-M3!' "Test/compile" publishLocal
     - run: rm -rf ~/.ivy2/local

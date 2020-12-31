@@ -96,12 +96,17 @@ object Common {
         else {
           "v" + version.value
         }
-      Seq(
-        "-sourcepath",
-        (baseDirectory in LocalRootProject).value.getAbsolutePath,
-        "-doc-source-url",
-        s"https://github.com/xuwei-k/zeroapply/tree/${tag}€{FILE_PATH}.scala"
-      )
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, _)) =>
+          Seq(
+            "-sourcepath",
+            (baseDirectory in LocalRootProject).value.getAbsolutePath,
+            "-doc-source-url",
+            s"https://github.com/xuwei-k/zeroapply/tree/${tag}€{FILE_PATH}.scala"
+          )
+        case _ =>
+          Nil
+      }
     },
     logBuffered in Test := false,
     pomExtra := (
