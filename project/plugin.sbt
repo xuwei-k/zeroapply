@@ -9,7 +9,7 @@ scalacOptions ++= Seq(
 
 addSbtPlugin("ch.epfl.lamp" % "sbt-dotty" % "0.5.1")
 
-addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.4.0")
+addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.4.1")
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.1.1")
 
