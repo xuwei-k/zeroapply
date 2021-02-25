@@ -58,19 +58,19 @@ lazy val root = Project("root", file("."))
     libraryDependencies ++= {
       if (Sxr.enableSxr.value) {
         Seq(
-          (libraryDependencies in scalaz).value,
-          (libraryDependencies in zeroapply).value
+          (scalaz / libraryDependencies).value,
+          (zeroapply / libraryDependencies).value
         ).flatten
       } else Nil
     },
     artifacts := Nil,
     packagedArtifacts := Map.empty,
-    artifacts ++= Classpaths.artifactDefs(Seq(packageDoc in Compile)).value,
-    packagedArtifacts ++= Classpaths.packaged(Seq(packageDoc in Compile)).value,
+    artifacts ++= Classpaths.artifactDefs(Seq(Compile / packageDoc)).value,
+    packagedArtifacts ++= Classpaths.packaged(Seq(Compile / packageDoc)).value,
     Sxr.settings1,
     Defaults.packageTaskSettings(
-      packageDoc in Compile,
-      (unidoc in Compile).map { _.flatMap(Path.allSubpaths) }
+      (Compile / packageDoc),
+      (Compile / unidoc).map { _.flatMap(Path.allSubpaths) }
     ),
     publish / skip := {
       CrossVersion.partialVersion(scalaVersion.value) match {

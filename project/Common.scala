@@ -36,7 +36,7 @@ object Common {
     commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
     releaseProcess := Seq[ReleaseStep](
       ReleaseStep { state =>
-        assert((Sxr.enableSxr in LocalRootProject).value)
+        assert((LocalRootProject / Sxr.enableSxr).value)
         state
       },
       checkSnapshotDependencies,
@@ -50,7 +50,7 @@ object Common {
       ReleaseStep(
         action = { state =>
           val extracted = Project extract state
-          extracted.runAggregated(PgpKeys.publishSigned in Global in extracted.get(thisProjectRef), state)
+          extracted.runAggregated(extracted.get(thisProjectRef) / (Global / PgpKeys.publishSigned), state)
         },
         enableCrossBuild = true
       ),
@@ -90,7 +90,7 @@ object Common {
       .toList,
     scalaVersion := Scala211,
     crossScalaVersions := Scala211 :: "2.12.13" :: "2.13.5" :: Nil,
-    scalacOptions in (Compile, doc) ++= {
+    (Compile / doc / scalacOptions) ++= {
       val tag =
         if (isSnapshot.value) gitHash
         else {
@@ -100,7 +100,7 @@ object Common {
         case Some((2, _)) =>
           Seq(
             "-sourcepath",
-            (baseDirectory in LocalRootProject).value.getAbsolutePath,
+            (LocalRootProject / baseDirectory).value.getAbsolutePath,
             "-doc-source-url",
             s"https://github.com/xuwei-k/zeroapply/tree/${tag}€{FILE_PATH}.scala"
           )
@@ -108,7 +108,7 @@ object Common {
           Nil
       }
     },
-    logBuffered in Test := false,
+    Test / logBuffered := false,
     pomExtra := (
       <developers>
         <developer>
@@ -128,7 +128,7 @@ object Common {
       }</tag>
       </scm>
     ),
-    fork in Test := true,
+    Test / fork := true,
     description := "zero cost Apply/Applicative syntax",
     checkGenerate := {
       val _ = generateBoilerplate.value
@@ -136,7 +136,7 @@ object Common {
       assert(lines.isEmpty, lines.mkString("\n"))
     },
     generateBoilerplate := {
-      val dir = (scalaSource in Compile).value.getParentFile
+      val dir = (Compile / scalaSource).value.getParentFile
       generateSources.value.foreach { source =>
         IO.write(
           dir / s"scala-${source.version}" / (source.name + ".scala"),
@@ -155,5 +155,5 @@ object Common {
       val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
       new RuleTransformer(stripTestScope).transform(node)(0)
     }
-  ) ++ Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) ~= { _.filterNot(unusedWarnings.toSet) })
+  ) ++ Seq(Compile, Test).flatMap(c => c / console / scalacOptions ~= { _.filterNot(unusedWarnings.toSet) })
 }
