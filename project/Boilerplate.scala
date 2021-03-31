@@ -7,7 +7,9 @@ object Boilerplate {
     val ts = t.mkString(", ")
     val tparams = t.map(_ + ": W").mkString(", ")
     val paramsF = (a, t).zipped.map((x, y) => x + ": F[" + y + "]").mkString(", ")
+    val inlineParamsF = (a, t).zipped.map((x, y) => s"${x}: F[${y}]").mkString(", inline ")
     val paramsFL = (a, t).zipped.map((x, y) => x + ": F[L, " + y + "]").mkString(", ")
+    val inlineParamsFL = (a, t).zipped.map((x, y) => s"${x}: F[L, ${y}]").mkString(", inline ")
     val params0 = a.map(_ + ": Tree").mkString(", ")
     val params1 = (a :+ "Nil").mkString(" :: ")
     val params2 = (t.map("w[" + _ + "]") :+ "Nil").mkString(" :: ")
@@ -39,8 +41,7 @@ ${(2 to n).map(gen).mkString("\n")}
 """
   }
 
-  // TODO use macro
-  private def optionScala3(objectName: String, classRename: String, n: Int): SourceCode = {
+  private def optionScala3NoInline(objectName: String, classRename: String, n: Int): SourceCode = {
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
@@ -55,6 +56,57 @@ ${(2 to n).map(gen).mkString("\n")}
     tuple$i[$ts](${a.mkString(", ")})
 
   final def tuple$i[$ts]($paramsF): F[($ts)] =
+    apply$i(${a.mkString(", ")})(Tuple$i.apply)"""
+    }
+
+    val code = s"""package zeroapply
+
+object $objectName {
+
+  import $classRename => F}
+
+${(2 to n).map(gen).mkString("\n")}
+}
+"""
+
+    SourceCode(objectName, code, 3)
+  }
+
+  private def indent(s: String): String = s.linesIterator.map("  " + _).mkString("", "\n", "")
+
+  private def optionScala3(objectName: String, classRename: String, n: Int, some: String, none: String, get: String => String): SourceCode = {
+    def gen(i: Int) = {
+      val g = new Gen(i)
+      import g._
+
+      val x = a.indices.map { i => s"x${i + 1}" }
+      val last = s"${some}(f(${x.zip(t).map { case (a, t) => a + get(t) }.mkString(", ")}))"
+      val impl = x
+        .zip(a)
+        .foldRight(last) { case ((x, aa), acc) =>
+          indent(s"""
+val ${x} = ${aa}
+if (${x}.isEmpty) {
+  ${none}
+} else {
+  ${acc}
+}""")
+        }
+        .linesIterator
+        .filter(_.trim.nonEmpty)
+        .mkString("\n")
+      s"""
+  inline def apply[$ts, Z]($inlineParamsF)(inline f: ($ts) => Z): F[Z] =
+    apply$i[$ts, Z](${a.mkString(", ")})(f)
+
+  inline def apply$i[$ts, Z]($inlineParamsF)(inline f: ($ts) => Z): F[Z] = {
+${indent(impl)}
+  }
+
+  inline def tuple[$ts]($inlineParamsF): F[($ts)] =
+    tuple$i[$ts](${a.mkString(", ")})
+
+  inline def tuple$i[$ts]($inlineParamsF): F[($ts)] =
     apply$i(${a.mkString(", ")})(Tuple$i.apply)"""
     }
 
@@ -199,8 +251,8 @@ ${(2 to n).map(gen).mkString("\n")}
     List(
       optionScala2("MaybeApply", "scalaz.{Maybe", "MaybeImpl", n),
       optionScala2("LazyOptionApply", "scalaz.{LazyOption", "LazyOptionImpl", n),
-      optionScala3("MaybeApply", "scalaz.{Maybe", n),
-      optionScala3("LazyOptionApply", "scalaz.{LazyOption", n),
+      optionScala3("MaybeApply", "scalaz.{Maybe", n, "scalaz.Maybe.just", "scalaz.Maybe.empty", t => s".asInstanceOf[scalaz.Maybe.Just[$t]].get"),
+      optionScala3("LazyOptionApply", "scalaz.{LazyOption", n, "scalaz.LazyOption.lazySome", "scalaz.LazyOption.lazyNone", _ => ".toOption.get"),
       eitherScala2("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
       eitherScala2("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
       eitherScala2("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
@@ -212,8 +264,8 @@ ${(2 to n).map(gen).mkString("\n")}
     List(
       SourceCode("OptionBoilerplate", optionBoilerplate(n), 2),
       SourceCode("EitherBoilerplate", eitherBoilerplate(n), 2),
-      optionScala3("OptionApply", "scala.{Option", n),
-      optionScala3("TryApply", "scala.util.{Try", n),
+      optionScala3("OptionApply", "scala.{Option", n, "Some", "None", _ => ".get"),
+      optionScala3NoInline("TryApply", "scala.util.{Try", n),
       eitherScala3("EitherApply", "scala.{Either", n),
       optionScala2("OptionApply", "scala.{Option", "OptionImpl", n),
       optionScala2("TryApply", "scala.util.{Try", "TryImpl", n),
