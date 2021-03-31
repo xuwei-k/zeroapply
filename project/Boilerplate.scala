@@ -4,6 +4,7 @@ object Boilerplate {
   private final class Gen(i: Int) {
     val t = (1 to i).map("A" + _)
     val a = (1 to i).map("a" + _)
+    val x = a.indices.map { i => s"x${i + 1}" }
     val ts = t.mkString(", ")
     val tparams = t.map(_ + ": W").mkString(", ")
     val paramsF = (a, t).zipped.map((x, y) => x + ": F[" + y + "]").mkString(", ")
@@ -79,7 +80,6 @@ ${(2 to n).map(gen).mkString("\n")}
       val g = new Gen(i)
       import g._
 
-      val x = a.indices.map { i => s"x${i + 1}" }
       val last = s"${some}(f(${x.zip(t).map { case (a, t) => a + get(t) }.mkString(", ")}))"
       val impl = x
         .zip(a)
@@ -184,21 +184,46 @@ ${(2 to n).map(gen).mkString("\n")}
 """
   }
 
-  private def eitherScala3(objectName: String, classRename: String, n: Int): SourceCode = {
+  private def eitherScala3(
+    objectName: String,
+    classRename: String,
+    n: Int,
+    wrapRight: String,
+    get: String => String
+  ): SourceCode = {
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
+
+      val last = s"${wrapRight}(f(${x.zip(t).map { case (a, t) => a + get(t) }.mkString(", ")}))"
+      val impl = indent(
+        x.zip(a)
+          .foldRight(last) { case ((xx, aa), acc) =>
+            indent(s"""
+val ${xx} = ${aa}
+if (${xx}.isLeft) {
+  ${xx}.asInstanceOf[F[L, Z]]
+} else {
+  ${acc}
+}""")
+          }
+          .linesIterator
+          .filter(_.trim.nonEmpty)
+          .mkString("\n")
+      )
+
       s"""
-  final def apply[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
+  inline def apply[$ts, L, Z]($inlineParamsFL)(f: ($ts) => Z): F[L, Z] =
     apply$i[$ts, L, Z](${a.mkString(", ")})(f)
 
-  final def apply$i[$ts, L, Z]($paramsFL)(f: ($ts) => Z): F[L, Z] =
-    for { ${a.zipWithIndex.map { case (a, i) => s"x${i + 1} <- $a" }.mkString("; ")} } yield f(${(1 to i).map("x" + _).mkString(", ")})
+  inline def apply$i[$ts, L, Z]($inlineParamsFL)(f: ($ts) => Z): F[L, Z] = {
+${impl}
+  }
 
-  final def tuple[$ts, L]($paramsFL): F[L, ($ts)]=
+  inline def tuple[$ts, L]($inlineParamsFL): F[L, ($ts)]=
     tuple$i(${a.mkString(", ")})
 
-  final def tuple$i[$ts, L]($paramsFL): F[L, ($ts)]=
+  inline def tuple$i[$ts, L]($inlineParamsFL): F[L, ($ts)]=
     apply$i(${a.mkString(", ")})(Tuple$i.apply)"""
     }
 
@@ -256,8 +281,8 @@ ${(2 to n).map(gen).mkString("\n")}
       eitherScala2("DisjunctionApply", """scalaz.{\/""", "DisjunctionImpl", n),
       eitherScala2("LazyEitherApply", """scalaz.{LazyEither""", "LazyEitherImpl", n),
       eitherScala2("ValidationNelApply", """scalaz.{ValidationNel""", "ValidationNelImpl", n),
-      eitherScala3("DisjunctionApply", """scalaz.{\/""", n),
-      eitherScala3("LazyEitherApply", """scalaz.{LazyEither""", n),
+      eitherScala3("DisjunctionApply", """scalaz.{\/""", n, "scalaz.\\/-", t => s".asInstanceOf[scalaz.\\/-[L, $t]].b"),
+      eitherScala3("LazyEitherApply", """scalaz.{LazyEither""", n, "scalaz.LazyEither.lazyRight", _ => s".toOption.get"),
     )
 
   def zeroapply(n: Int): List[SourceCode] =
@@ -266,7 +291,7 @@ ${(2 to n).map(gen).mkString("\n")}
       SourceCode("EitherBoilerplate", eitherBoilerplate(n), 2),
       optionScala3("OptionApply", "scala.{Option", n, "Some", "None", _ => ".get"),
       optionScala3NoInline("TryApply", "scala.util.{Try", n),
-      eitherScala3("EitherApply", "scala.{Either", n),
+      eitherScala3("EitherApply", "scala.{Either", n, "Right", t => s".asInstanceOf[Right[L, $t]].value"),
       optionScala2("OptionApply", "scala.{Option", "OptionImpl", n),
       optionScala2("TryApply", "scala.util.{Try", "TryImpl", n),
       eitherScala2("EitherApply", "scala.{Either", "EitherImpl", n),
