@@ -131,7 +131,6 @@ object Common {
     Test / fork := true,
     description := "zero cost Apply/Applicative syntax",
     checkGenerate := {
-      val _ = generateBoilerplate.value
       val lines = sys.process.Process("git diff").lineStream.toList
       assert(lines.isEmpty, lines.mkString("\n"))
     },
