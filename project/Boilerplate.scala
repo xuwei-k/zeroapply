@@ -42,29 +42,62 @@ ${(2 to n).map(gen).mkString("\n")}
 """
   }
 
-  private def optionScala3NoInline(objectName: String, classRename: String, n: Int): SourceCode = {
+  private def tryScala3(n: Int): SourceCode = {
+    val objectName = "TryApply"
     def gen(i: Int) = {
       val g = new Gen(i)
       import g._
+
+      val last =
+        s"""try {
+           |    Success(f(${x.map("      " + _ + ".get").mkString("\n", ",\n", "\n")}    ))
+           |  } catch {
+           |    case NonFatal(e) => Failure(e)
+           |  }""".stripMargin
+      val impl = indent(
+        x.zip(a)
+          .foldRight(last) { case ((x, aa), acc) =>
+            indent(s"""
+val ${x} = try {
+  ${aa}
+} catch {
+  case NonFatal(e) => Failure(e)
+}
+if (${x}.isFailure) {
+  ${x}.asInstanceOf[Try[Z]]
+} else {
+  ${acc}
+}""")
+          }
+          .linesIterator
+          .filter(_.trim.nonEmpty)
+          .mkString("\n")
+      )
+
       s"""
-  final def apply[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
+  inline def apply[$ts, Z]($inlineParamsF)(f: ($ts) => Z): Try[Z] =
     apply$i[$ts, Z](${a.mkString(", ")})(f)
 
-  final def apply$i[$ts, Z]($paramsF)(f: ($ts) => Z): F[Z] =
-    for { ${a.zipWithIndex.map { case (a, i) => s"x${i + 1} <- $a" }.mkString("; ")} } yield f(${(1 to i).map("x" + _).mkString(", ")})
+  inline def apply$i[$ts, Z]($inlineParamsF)(f: ($ts) => Z): Try[Z] = {
+$impl
+  }
 
-  final def tuple[$ts]($paramsF): F[($ts)] =
+  inline def tuple[$ts]($inlineParamsF): Try[($ts)] =
     tuple$i[$ts](${a.mkString(", ")})
 
-  final def tuple$i[$ts]($paramsF): F[($ts)] =
+  inline def tuple$i[$ts]($inlineParamsF): Try[($ts)] =
     apply$i(${a.mkString(", ")})(Tuple$i.apply)"""
     }
 
     val code = s"""package zeroapply
 
-object $objectName {
+import scala.util.Failure
+import scala.util.Try
+import scala.util.Success
+import scala.util.{ Try => F }
+import scala.util.control.NonFatal
 
-  import $classRename => F}
+object $objectName {
 
 ${(2 to n).map(gen).mkString("\n")}
 }
@@ -290,7 +323,7 @@ ${(2 to n).map(gen).mkString("\n")}
       SourceCode("OptionBoilerplate", optionBoilerplate(n), 2),
       SourceCode("EitherBoilerplate", eitherBoilerplate(n), 2),
       optionScala3("OptionApply", "scala.{Option", n, "Some", "None", _ => ".get"),
-      optionScala3NoInline("TryApply", "scala.util.{Try", n),
+      tryScala3(n),
       eitherScala3("EitherApply", "scala.{Either", n, "Right", t => s".asInstanceOf[Right[L, $t]].value"),
       optionScala2("OptionApply", "scala.{Option", "OptionImpl", n),
       optionScala2("TryApply", "scala.util.{Try", "TryImpl", n),
