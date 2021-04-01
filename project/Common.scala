@@ -89,7 +89,7 @@ object Common {
       }
       .toList,
     scalaVersion := Scala211,
-    crossScalaVersions := Scala211 :: "2.12.13" :: "2.13.5" :: Nil,
+    crossScalaVersions := Scala211 :: "2.12.13" :: "2.13.5" :: "3.0.0-RC2" :: Nil,
     (Compile / doc / scalacOptions) ++= {
       val tag =
         if (isSnapshot.value) gitHash
