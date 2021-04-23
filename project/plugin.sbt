@@ -7,8 +7,6 @@ scalacOptions ++= Seq(
   "-Yno-adapted-args",
 )
 
-addSbtPlugin("ch.epfl.lamp" % "sbt-dotty" % "0.5.4")
-
 addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.4.1")
 
 addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.1.2")
