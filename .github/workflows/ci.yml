@@ -15,6 +15,6 @@ jobs:
     - uses: coursier/cache-action@v6
     - run: git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
     - run: git show --oneline --check
-    - run: sbt -v generateBoilerplate scalafmtSbtCheck scalafmtCheckAll
+    - run: sbt -v generateBoilerplate scalafmtSbtCheck "+scalafmtCheckAll"
     - run: sbt -v checkGenerate "+test" "+publishLocal"
     - run: rm -rf ~/.ivy2/local
