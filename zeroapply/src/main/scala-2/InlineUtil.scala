@@ -3,7 +3,7 @@ package zeroapply
 import scala.reflect.macros.blackbox.Context
 
 /**
- * [[https://github.com/non/spire/blob/v0.8.2/macros/src/main/scala/spire/macros/Syntax.scala#L25-L71]]
+ * [[https://github.com/non/spire/blob/v0.8.3/macros/src/main/scala/spire/macros/Syntax.scala#L25-L71]]
  */
 abstract class InlineUtil {
   val c: Context
