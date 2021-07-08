@@ -19,6 +19,6 @@ addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.3")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.10.0")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.3")
 
 fullResolvers ~= { _.filterNot(_.name == "jcenter") }
