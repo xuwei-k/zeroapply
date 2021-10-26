@@ -4,7 +4,7 @@ object build {
   final val boilerplateMax = 22
   val scalazVersion = SettingKey[String]("scalazVersion")
 
-  val junit = "com.novocode" % "junit-interface" % "0.11" % "test"
+  val junit = "com.github.sbt" % "junit-interface" % "0.13.2" % "test"
 
   final val zeroapplyName = "zeroapply"
   final val zeroapplyScalazName = "zeroapply-scalaz"
