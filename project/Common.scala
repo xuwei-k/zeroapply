@@ -29,7 +29,6 @@ object Common {
       version,
       scalaVersion,
       sbtVersion,
-      scalacOptions,
       licenses
     ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
