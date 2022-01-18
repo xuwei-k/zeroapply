@@ -35,10 +35,6 @@ object Common {
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
     commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
     releaseProcess := Seq[ReleaseStep](
-      ReleaseStep { state =>
-        assert((LocalRootProject / Sxr.enableSxr).value)
-        state
-      },
       checkSnapshotDependencies,
       inquireVersions,
       runClean,

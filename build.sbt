@@ -55,19 +55,10 @@ lazy val root = Project("root", file("."))
     Common.baseSettings,
     name := "zeroapply-all",
     Common.generateSources := Nil,
-    libraryDependencies ++= {
-      if (Sxr.enableSxr.value) {
-        Seq(
-          (scalaz / libraryDependencies).value,
-          (zeroapply / libraryDependencies).value
-        ).flatten
-      } else Nil
-    },
     artifacts := Nil,
     packagedArtifacts := Map.empty,
     artifacts ++= Classpaths.artifactDefs(Seq(Compile / packageDoc)).value,
     packagedArtifacts ++= Classpaths.packaged(Seq(Compile / packageDoc)).value,
-    Sxr.settings1,
     Defaults.packageTaskSettings(
       (Compile / packageDoc),
       (Compile / unidoc).map { _.flatMap(Path.allSubpaths) }
@@ -81,7 +72,6 @@ lazy val root = Project("root", file("."))
           false
       }
     },
-    Sxr.settings2
   )
   .enablePlugins(
     ScalaUnidocPlugin
