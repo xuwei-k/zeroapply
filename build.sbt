@@ -40,7 +40,7 @@ lazy val scalaz = Project("scalaz", file("scalaz"))
       scalazVersion
     ),
     Common.generateSources := Boilerplate.scalaz(boilerplateMax),
-    scalazVersion := "7.3.5",
+    scalazVersion := "7.3.6",
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core" % scalazVersion.value cross CrossVersion.for3Use2_13,
       "com.github.scalaprops" %% "scalaprops" % "0.8.4" % "test",
