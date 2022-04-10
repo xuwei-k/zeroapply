@@ -50,14 +50,14 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
       var $failure : _root_.scalaz.IList[$left] = _root_.scalaz.IList.empty[$left]
 
       ..${valNames.reverse.map { case name =>
-      q"""
+        q"""
           if($name.isInstanceOf[_root_.scalaz.Failure[_, _]]){
             val nel = $name.asInstanceOf[_root_.scalaz.Failure[_root_.scalaz.NonEmptyList[$left], _]].e
             $failure :::= nel.tail
             $failure ::= nel.head
           }
         """
-    }}
+      }}
 
       $failure match {
         case _root_.scalaz.INil() =>
