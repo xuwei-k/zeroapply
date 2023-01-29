@@ -7,7 +7,7 @@ scalacOptions ++= Seq(
   "-Yno-adapted-args",
 )
 
-addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.4.3")
+addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.4.4")
 
 addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.2.1")
 
