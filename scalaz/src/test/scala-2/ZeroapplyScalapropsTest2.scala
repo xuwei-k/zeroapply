@@ -10,7 +10,7 @@ import scalaz.std.string._
 import scalaz.std.tuple._
 
 object ZeroapplyScalapropsTest2 extends Scalaprops {
-  private[this] implicit val stringGen = Gen.asciiString
+  private[this] implicit val stringGen: Gen[String] = Gen.asciiString
 
   private implicit class AssertOps[A](private val a1: A) extends AnyVal {
     def mustEqual(a2: A)(implicit A: Equal[A]): Boolean = {
