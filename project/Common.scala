@@ -75,7 +75,7 @@ object Common {
         case Some((3, _)) =>
           Nil
         case _ =>
-          Seq("-Xlint") ++ unusedWarnings
+          Seq("-Xlint", "-Xsource:3") ++ unusedWarnings
       }
     },
     scalacOptions ++= PartialFunction
