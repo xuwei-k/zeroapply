@@ -62,7 +62,7 @@ object Common {
       .toList,
     organization := "com.github.xuwei-k",
     homepage := Some(url("https://github.com/xuwei-k/zeroapply")),
-    licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/mit-license.php")),
+    licenses := Seq("MIT License" -> url("https://opensource.org/license/mit")),
     scalacOptions ++= Seq(
       "-deprecation",
       "-unchecked",
