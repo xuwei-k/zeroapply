@@ -71,11 +71,21 @@ object Common {
       "-language:implicitConversions",
     ),
     scalacOptions ++= {
+      scalaBinaryVersion.value match {
+        case "2.12" =>
+          Seq("-Xsource:3")
+        case "2.13" =>
+          Seq("-Xsource:3-cross")
+        case _ =>
+          Nil
+      }
+    },
+    scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((3, _)) =>
           Nil
         case _ =>
-          Seq("-Xlint", "-Xsource:3") ++ unusedWarnings
+          Seq("-Xlint") ++ unusedWarnings
       }
     },
     scalacOptions ++= PartialFunction
