@@ -18,7 +18,7 @@ object Common {
     "-Ywarn-unused",
   )
 
-  private[this] val Scala211 = "2.11.12"
+  private[this] val Scala212 = "2.12.20"
 
   val baseSettings = Seq(
     fullResolvers ~= { _.filterNot(_.name == "jcenter") },
@@ -83,8 +83,8 @@ object Common {
         case Some((2, v)) if v <= 12 => "-Yno-adapted-args"
       }
       .toList,
-    scalaVersion := Scala211,
-    crossScalaVersions := Scala211 :: "2.12.20" :: "2.13.14" :: "3.3.3" :: Nil,
+    scalaVersion := Scala212,
+    crossScalaVersions := Scala212 :: "2.13.14" :: "3.3.3" :: Nil,
     (Compile / doc / scalacOptions) ++= {
       val tag =
         if (isSnapshot.value) gitHash
