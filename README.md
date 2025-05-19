@@ -77,11 +77,11 @@ new Order[Foo[A, B]] {
 ### latest stable version
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.5.0"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.5.1"
 ```
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.5.0"
+libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.5.1"
 ```
 
 ### scaladoc
