@@ -44,12 +44,15 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
       inlineAndReset(q"$f(..$list)")
     }
 
+    val t = TermName(c.freshName("t"))
+    val h = TermName(c.freshName("h"))
+
     val tree = q"""
       ..$valList
 
       var $failure : _root_.scalaz.IList[$left] = _root_.scalaz.IList.empty[$left]
 
-      ..${valNames.reverse.map { case name =>
+      ..${valNames.reverse.map { name =>
         q"""
           if($name.isInstanceOf[_root_.scalaz.Failure[_, _]]){
             val nel = $name.asInstanceOf[_root_.scalaz.Failure[_root_.scalaz.NonEmptyList[$left], _]].e
@@ -62,8 +65,8 @@ final class ValidationNelImpl(override val c: Context) extends EitherBase {
       $failure match {
         case _root_.scalaz.INil() =>
           ${wrapRight(ifSuccess)}
-        case  _root_.scalaz.ICons(h, t) =>
-          _root_.scalaz.Failure(_root_.scalaz.NonEmptyList.nel(h, t))
+        case _root_.scalaz.ICons($h, $t) =>
+          _root_.scalaz.Failure(_root_.scalaz.NonEmptyList.nel($h, $t))
       }
     """
     tree

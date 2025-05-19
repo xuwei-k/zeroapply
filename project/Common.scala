@@ -75,7 +75,7 @@ object Common {
         case "2.12" =>
           Seq("-Xsource:3")
         case "2.13" =>
-          Seq("-Xsource:3-cross")
+          Seq("-Xsource:3-cross", "-Xlint:pattern-shadow", "-Xlint:private-shadow")
         case _ =>
           Nil
       }
