@@ -34,10 +34,10 @@ zeroapply.OptionApply.apply3(Option(1), Option(2), Option(3))(_ + _ + _)
 ```
 
 
-- [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22%20AND%20(a%3A%22zeroapply_2.11%22%20OR%20a%3A%22zeroapply-scalaz_2.11%22))
-- [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
+- [Maven Central Repository Search](https://search.maven.org/search?q=g:com.github.xuwei-k%20AND%20(a:zeroapply_3%20OR%20a:zeroapply-scalaz_3))
+- [Maven Central](https://repo1.maven.org/maven2/com/github/xuwei-k/)
 
-## [`scalaz.Equal`](https://github.com/scalaz/scalaz/blob/v7.1.5/core/src/main/scala/scalaz/Equal.scala) and [`scalaz.Order`](https://github.com/scalaz/scalaz/blob/v7.1.5/core/src/main/scala/scalaz/Order.scala) macro
+## [`scalaz.Equal`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Equal.scala) and [`scalaz.Order`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Order.scala) macro
 
 ```scala
 import scalaz._, std.AllInstances._
@@ -84,8 +84,11 @@ libraryDependencies += "com.github.xuwei-k" %% "zeroapply" % "0.5.0"
 libraryDependencies += "com.github.xuwei-k" %% "zeroapply-scalaz" % "0.5.0"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/zeroapply-all_2.11/0.5.0/zeroapply-all_2.11-0.5.0-javadoc.jar/!/index.html)
+### scaladoc
 
+[![scaladoc](https://javadoc.io/badge2/com.github.xuwei-k/zeroapply-scalaz_3/javadoc.svg)](https://javadoc.io/doc/com.github.xuwei-k/zeroapply-scalaz_3)
+
+[![scaladoc](https://javadoc.io/badge2/com.github.xuwei-k/zeroapply_3/javadoc.svg)](https://javadoc.io/doc/com.github.xuwei-k/zeroapply_3)
 
 ### for scalaz 7.2.x
 
