@@ -43,8 +43,8 @@ lazy val scalaz = Project("scalaz", file("scalaz"))
     scalazVersion := "7.3.8",
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core" % scalazVersion.value,
-      "com.github.scalaprops" %% "scalaprops" % "0.9.1" % "test",
-      "com.github.scalaprops" %% "scalaprops-scalaz" % "0.9.1" % "test",
+      "com.github.scalaprops" %% "scalaprops" % "0.10.0" % "test",
+      "com.github.scalaprops" %% "scalaprops-scalaz" % "0.10.0" % "test",
       junit,
     )
   )
