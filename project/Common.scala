@@ -4,7 +4,6 @@ import sbtrelease.ReleasePlugin.autoImport._
 import ReleaseStateTransformations._
 import com.jsuereth.sbtpgp.PgpKeys
 import sbtbuildinfo.BuildInfoKeys._
-import xerial.sbt.Sonatype.autoImport.sonatypePublishToBundle
 
 object Common {
   def gitHash: String =
@@ -22,7 +21,7 @@ object Common {
 
   val baseSettings = Seq(
     fullResolvers ~= { _.filterNot(_.name == "jcenter") },
-    publishTo := sonatypePublishToBundle.value,
+    publishTo := (if (isSnapshot.value) None else localStaging.value),
     buildInfoKeys := Seq(
       organization,
       name,
@@ -49,17 +48,12 @@ object Common {
         },
         enableCrossBuild = true
       ),
-      releaseStepCommandAndRemaining("sonatypeBundleRelease"),
+      releaseStepCommandAndRemaining("sonaRelease"),
       setNextVersion,
       commitNextVersion,
       UpdateReadme.updateReadmeProcess,
       pushChanges
     ),
-    credentials ++= PartialFunction
-      .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) { case (Some(user), Some(pass)) =>
-        Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
-      }
-      .toList,
     organization := "com.github.xuwei-k",
     homepage := Some(url("https://github.com/xuwei-k/zeroapply")),
     licenses := Seq("MIT License" -> url("https://opensource.org/license/mit")),
