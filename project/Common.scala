@@ -17,7 +17,7 @@ object Common {
     "-Ywarn-unused",
   )
 
-  private[this] val Scala212 = "2.12.20"
+  private[this] val Scala212 = "2.12.21"
 
   val baseSettings = Seq(
     fullResolvers ~= { _.filterNot(_.name == "jcenter") },
