@@ -2,9 +2,7 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-unchecked",
   "-language:existentials",
-  "-language:higherKinds",
   "-language:implicitConversions",
-  "-Yno-adapted-args",
 )
 
 addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.5.3")
