@@ -20,7 +20,6 @@ object Common {
   private[this] val Scala212 = "2.12.21"
 
   val baseSettings = Seq(
-    fullResolvers ~= { _.filterNot(_.name == "jcenter") },
     publishTo := (if (isSnapshot.value) None else localStaging.value),
     buildInfoKeys := Seq(
       organization,
