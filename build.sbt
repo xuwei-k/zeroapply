@@ -55,25 +55,6 @@ lazy val root = Project("root", file("."))
     Common.baseSettings,
     name := "zeroapply-all",
     Common.generateSources := Nil,
-    artifacts := Nil,
-    packagedArtifacts := Map.empty,
-    artifacts ++= Classpaths.artifactDefs(Seq(Compile / packageDoc)).value,
-    packagedArtifacts ++= Classpaths.packaged(Seq(Compile / packageDoc)).value,
-    Defaults.packageTaskSettings(
-      (Compile / packageDoc),
-      (Compile / unidoc).map { _.flatMap(Path.allSubpaths) }
-    ),
-    publish / skip := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((3, _)) =>
-          // TODO https://github.com/sbt/sbt-unidoc/issues/83
-          true
-        case _ =>
-          false
-      }
-    },
-  )
-  .enablePlugins(
-    ScalaUnidocPlugin
+    publish / skip := true,
   )
   .aggregate(zeroapply, scalaz)
