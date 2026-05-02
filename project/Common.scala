@@ -4,10 +4,11 @@ import sbtrelease.ReleasePlugin.autoImport._
 import ReleaseStateTransformations._
 import com.jsuereth.sbtpgp.PgpKeys
 import sbtbuildinfo.BuildInfoKeys._
+import sbtbuildinfo.BuildInfoPlugin.autoImport.given
 
 object Common {
   def gitHash: String =
-    sys.process.Process("git rev-parse HEAD").lineStream_!.head
+    sys.process.Process("git rev-parse HEAD").lazyLines_!.head
 
   @transient
   val generateBoilerplate = TaskKey[Unit]("generateBoilerplate")
@@ -131,7 +132,7 @@ object Common {
     Test / fork := true,
     description := "zero cost Apply/Applicative syntax",
     checkGenerate := {
-      val lines = sys.process.Process("git diff").lineStream.toList
+      val lines = sys.process.Process("git diff").lazyLines.toList
       assert(lines.isEmpty, lines.mkString("\n"))
     },
     generateBoilerplate := {
