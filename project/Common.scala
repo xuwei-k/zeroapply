@@ -13,11 +13,11 @@ object Common {
   val generateSources = SettingKey[List[Boilerplate.SourceCode]]("generateSources")
   val checkGenerate = TaskKey[Unit]("checkGenerate")
 
-  private[this] val unusedWarnings = Seq(
+  private val unusedWarnings = Seq(
     "-Ywarn-unused",
   )
 
-  private[this] val Scala212 = "2.12.21"
+  private val Scala212 = "2.12.21"
 
   val baseSettings = Seq(
     publishTo := (if (isSnapshot.value) None else localStaging.value),
