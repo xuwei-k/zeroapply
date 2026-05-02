@@ -9,8 +9,10 @@ object Common {
   def gitHash: String =
     sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
+  @transient
   val generateBoilerplate = TaskKey[Unit]("generateBoilerplate")
   val generateSources = SettingKey[List[Boilerplate.SourceCode]]("generateSources")
+  @transient
   val checkGenerate = TaskKey[Unit]("checkGenerate")
 
   private val unusedWarnings = Seq(
