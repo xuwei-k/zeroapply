@@ -57,16 +57,16 @@ object Common {
     homepage := Some(url("https://github.com/xuwei-k/zeroapply")),
     licenses := Seq(License.MIT),
     scalacOptions ++= Seq(
+      "-release:8",
       "-deprecation",
       "-unchecked",
       "-language:existentials",
-      "-language:higherKinds",
       "-language:implicitConversions",
     ),
     scalacOptions ++= {
       scalaBinaryVersion.value match {
         case "2.12" =>
-          Seq("-Xsource:3")
+          Seq("-Xsource:3", "-language:higherKinds")
         case "2.13" =>
           Seq("-Xsource:3-cross", "-Xlint:pattern-shadow", "-Xlint:private-shadow")
         case _ =>
