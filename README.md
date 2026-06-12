@@ -37,7 +37,7 @@ zeroapply.OptionApply.apply3(Option(1), Option(2), Option(3))(_ + _ + _)
 - [Maven Central Repository Search](https://search.maven.org/search?q=g:com.github.xuwei-k%20AND%20(a:zeroapply_3%20OR%20a:zeroapply-scalaz_3))
 - [Maven Central](https://repo1.maven.org/maven2/com/github/xuwei-k/)
 
-## [`scalaz.Equal`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Equal.scala) and [`scalaz.Order`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Order.scala) macro
+## [`scalaz.Equal`](https://github.com/scalaz/scalaz/blob/v7.3.9/core/src/main/scala/scalaz/Equal.scala) and [`scalaz.Order`](https://github.com/scalaz/scalaz/blob/v7.3.9/core/src/main/scala/scalaz/Order.scala) macro
 
 ```scala
 import scalaz._, std.AllInstances._
