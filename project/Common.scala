@@ -57,7 +57,7 @@ object Common {
       pushChanges
     ),
     organization := "com.github.xuwei-k",
-    homepage := Some(url("https://github.com/xuwei-k/zeroapply")),
+    homepage := Some(uri("https://github.com/xuwei-k/zeroapply")),
     licenses := Seq(License.MIT),
     scalacOptions ++= Seq(
       "-release:8",
