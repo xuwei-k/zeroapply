@@ -5,7 +5,7 @@ scalacOptions ++= Seq(
   "-language:implicitConversions",
 )
 
-addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.5.3")
+addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.6.0")
 
 addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.3.2")
 
